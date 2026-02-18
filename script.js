@@ -1,73 +1,58 @@
-/**
- * ZEN-NOTES MASTER SCRIPT
- * Handles: Auth, Folder Management, Search, Auto-save, and Theme
- */
-
-// 1. STATE & DATA INITIALIZATION
+// --- STATE MANAGEMENT ---
 let isSignUpMode = false;
-
-// Load folders from LocalStorage or create a default one
 let folders = JSON.parse(localStorage.getItem('zen_notes_v5')) || [
-    { id: Date.now(), name: "My Journal", notes: "" }
+    { id: Date.now(), name: "Journal", notes: "" }
 ];
 let currentFolderId = folders[0].id;
 
-// 2. AUTHENTICATION & VAULT LOGIC
-function toggleAuthMode() {
+// --- AUTH LOGIC (Global Scope) ---
+window.toggleAuthMode = function() {
     isSignUpMode = !isSignUpMode;
-    const title = document.querySelector('#login-screen h1');
+    const title = document.getElementById('auth-header');
     const btn = document.getElementById('auth-submit-btn');
-    const toggleLink = document.querySelector('.text-link');
+    const link = document.getElementById('toggle-link');
     const hint = document.getElementById('toggle-text');
 
     if (isSignUpMode) {
         title.innerText = "Create Account";
         btn.innerText = "Register";
         hint.innerText = "Already a member?";
-        toggleLink.innerText = "Sign In";
+        link.innerText = "Sign In";
     } else {
         title.innerText = "Zen-Notes";
         btn.innerText = "Sign In";
         hint.innerText = "New here?";
-        toggleLink.innerText = "Sign Up";
+        link.innerText = "Sign Up";
     }
-}
+};
 
-function handleAuth() {
-    const userIn = document.getElementById('username-input').value.trim();
-    const passIn = document.getElementById('password-input').value.trim();
+window.handleAuth = function() {
+    const user = document.getElementById('username-input').value.trim();
+    const pass = document.getElementById('password-input').value.trim();
     
-    if (!userIn || !passIn) {
-        alert("Please fill in all fields.");
-        return;
-    }
+    if (!user || !pass) return alert("Fields cannot be empty.");
 
     if (isSignUpMode) {
-        localStorage.setItem('zen_user', userIn);
-        localStorage.setItem('zen_pass', passIn);
-        alert("Account created locally! You can now sign in.");
-        toggleAuthMode();
+        localStorage.setItem('zen_user', user);
+        localStorage.setItem('zen_pass', pass);
+        alert("Account Created Locally. Please Sign In.");
+        window.toggleAuthMode();
     } else {
-        const savedUser = localStorage.getItem('zen_user');
-        const savedPass = localStorage.getItem('zen_pass');
-
-        if (userIn === savedUser && passIn === savedPass) {
-            document.body.classList.remove('locked'); // Unlocks the UI
+        if (user === localStorage.getItem('zen_user') && pass === localStorage.getItem('zen_pass')) {
+            document.body.classList.remove('locked');
             initApp();
         } else {
-            alert("Access Denied: Invalid credentials.");
+            alert("Invalid credentials.");
         }
     }
-}
+};
 
-function lockVault() {
+window.lockVault = function() {
     document.body.classList.add('locked');
-    // Clear inputs for security when locking
-    document.getElementById('username-input').value = '';
     document.getElementById('password-input').value = '';
-}
+};
 
-// 3. FOLDER MANAGEMENT
+// --- APP CORE ---
 function initApp() {
     renderFolders();
     loadFolder(currentFolderId);
@@ -76,70 +61,74 @@ function initApp() {
 function renderFolders(filter = "") {
     const list = document.getElementById('folder-list');
     list.innerHTML = '';
-
     folders.forEach(f => {
         if (f.name.toLowerCase().includes(filter.toLowerCase())) {
             const li = document.createElement('li');
             li.className = f.id === currentFolderId ? 'active' : '';
             li.innerHTML = `
                 <span onclick="loadFolder(${f.id})" style="flex:1">${f.name}</span>
-                <span onclick="deleteFolder(${f.id})" style="cursor:pointer; opacity:0.4">×</span>
+                <span onclick="deleteFolder(${f.id})" style="opacity:0.4">×</span>
             `;
             list.appendChild(li);
         }
     });
 }
 
-function loadFolder(id) {
+window.loadFolder = function(id) {
     currentFolderId = id;
-    const folder = folders.find(f => f.id === id);
-    if (folder) {
-        document.getElementById('note-area').value = folder.notes;
-        document.getElementById('current-folder-title').innerText = folder.name;
+    const f = folders.find(folder => folder.id === id);
+    if (f) {
+        document.getElementById('note-area').value = f.notes;
+        document.getElementById('current-folder-title').innerText = f.name;
         renderFolders(document.getElementById('search-bar').value);
     }
-}
+};
 
-function addFolder() {
-    const name = prompt("Enter folder name:");
-    if (name && name.trim() !== "") {
-        const newFolder = { id: Date.now(), name: name.trim(), notes: "" };
-        folders.push(newFolder);
-        saveData();
-        loadFolder(newFolder.id);
+window.addFolder = function() {
+    const name = prompt("Folder Name:");
+    if (name) {
+        const newF = { id: Date.now(), name, notes: "" };
+        folders.push(newF);
+        save();
+        window.loadFolder(newF.id);
     }
-}
+};
 
-function deleteFolder(id) {
-    if (folders.length === 1) {
-        alert("You must keep at least one folder.");
-        return;
-    }
-    if (confirm("Permanently delete this folder?")) {
+window.deleteFolder = function(id) {
+    if (folders.length > 1 && confirm("Delete folder?")) {
         folders = folders.filter(f => f.id !== id);
-        if (currentFolderId === id) currentFolderId = folders[0].id;
-        saveData();
-        loadFolder(currentFolderId);
+        currentFolderId = folders[0].id;
+        save();
+        window.loadFolder(currentFolderId);
     }
-}
+};
 
-function filterFolders() {
-    const query = document.getElementById('search-bar').value;
-    renderFolders(query);
-}
+window.filterFolders = function() {
+    renderFolders(document.getElementById('search-bar').value);
+};
 
-// 4. THEME & UTILITIES
-function toggleTheme() {
+window.toggleTheme = function() {
     document.body.classList.toggle('dark-theme');
-    // Optional: Save theme preference
-    const isDark = document.body.classList.contains('dark-theme');
-    localStorage.setItem('zen_theme', isDark ? 'dark' : 'light');
-}
+};
 
-// Check for saved theme on load
-if (localStorage.getItem('zen_theme') === 'light') {
-    document.body.classList.remove('dark-theme');
+// --- DATA PERSISTENCE ---
+document.getElementById('note-area').addEventListener('input', (e) => {
+    const f = folders.find(folder => folder.id === currentFolderId);
+    if (f) {
+        f.notes = e.target.value;
+        save();
+    }
+});
+
+function save() {
+    localStorage.setItem('zen_notes_v5', JSON.stringify(folders));
 }
 
 function exportToPDF() {
-    window
+    window.print();
+}
+
+// Support Enter key for login
+document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && document.body.classList.contains('locked')) window.handleAuth();
+});
