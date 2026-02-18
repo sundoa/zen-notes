@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zen-Notes | Secure Workspace</title>
+    <title>Zen-Notes | Secure Vault</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" type="image/png" href="./icon.png">
     <link rel="manifest" href="./manifest.json">
@@ -13,19 +13,22 @@
     <div id="login-screen" class="overlay">
         <div class="login-card">
             <div class="brand-icon">Zen</div>
-            <h1 id="auth-title">Welcome</h1>
-            <p id="auth-desc">Please sign in to continue</p>
+            <h1 id="auth-title">Welcome Back</h1>
+            <p id="auth-desc">Please sign in to access your notes</p>
             
-            <input type="text" id="username-input" placeholder="Username" autocomplete="off">
-            <input type="password" id="password-input" placeholder="Password">
+            <div class="input-group">
+                <input type="text" id="username-input" placeholder="Username" autocomplete="off">
+                <input type="password" id="password-input" placeholder="Password">
+            </div>
             
-            <button class="login-btn" id="auth-submit" onclick="handleAuth()">Sign In</button>
+            <button type="button" class="login-btn" onclick="handleAuth()" id="auth-submit-btn">Sign In</button>
             
-            <p id="auth-toggle-text" style="margin-top: 15px; font-size: 0.9rem; color: #a0a0a0;">
-                Don't have an account? <a href="#" onclick="toggleAuthMode()" style="color: #007aff; text-decoration: none;">Sign Up</a>
-            </p>
+            <div class="auth-footer">
+                <span id="toggle-text">Don't have an account?</span> 
+                <button type="button" class="link-btn" onclick="toggleAuthMode()" id="toggle-link">Sign Up</button>
+            </div>
             
-            <p id="error-msg" style="color: #ff4d4d; font-size: 0.8rem; margin-top: 10px; display: none;">Invalid credentials</p>
+            <p id="error-msg" class="error-text"></p>
         </div>
     </div>
 
@@ -33,21 +36,21 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h3>Workspace</h3>
-                <button class="add-folder-btn" onclick="addFolder()">+</button>
+                <button class="add-btn" onclick="addFolder()">+</button>
             </div>
             <ul id="folder-list"></ul>
             <div class="sidebar-footer">
-                <button class="export-btn" onclick="exportToPDF()">📄 Save as PDF</button>
-                <button class="logout-link" onclick="logout()">Lock & Logout</button>
+                <button class="secondary-btn" onclick="exportToPDF()">📄 Export to PDF</button>
+                <button class="logout-btn" onclick="location.reload()">Lock App</button>
             </div>
         </aside>
 
-        <main class="editor-pane">
-            <div class="editor-header">
-                <h2 id="current-folder-title">Select a folder</h2>
-                <span id="save-indicator">Synced</span>
-            </div>
-            <textarea id="note-area" placeholder="Write your thoughts here..."></textarea>
+        <main class="editor">
+            <header class="editor-header">
+                <h2 id="current-folder-title">Notes</h2>
+                <div id="save-status">Synced</div>
+            </header>
+            <textarea id="note-area" placeholder="Write something peaceful..."></textarea>
         </main>
     </div>
 
