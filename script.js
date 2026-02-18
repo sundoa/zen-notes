@@ -1,58 +1,79 @@
-// --- STATE MANAGEMENT ---
+// --- 1. STATE & DATA ---
 let isSignUpMode = false;
-let folders = JSON.parse(localStorage.getItem('zen_notes_v5')) || [
+let folders = JSON.parse(localStorage.getItem('zen_notes_v6')) || [
     { id: Date.now(), name: "Journal", notes: "" }
 ];
 let currentFolderId = folders[0].id;
 
-// --- AUTH LOGIC (Global Scope) ---
-window.toggleAuthMode = function() {
+// --- 2. ENGINE INITIALIZATION ---
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("Zen-Notes Engine Online");
+
+    // Grab UI elements
+    const submitBtn = document.getElementById('auth-submit-btn');
+    const toggleBtn = document.getElementById('toggle-link');
+
+    // Attach listeners
+    if (submitBtn) submitBtn.addEventListener('click', handleAuth);
+    if (toggleBtn) toggleBtn.addEventListener('click', toggleAuthMode);
+
+    // Initial check for theme
+    const savedTheme = localStorage.getItem('zen_theme');
+    if (savedTheme === 'light') document.body.classList.remove('dark-theme');
+});
+
+// --- 3. AUTHENTICATION LOGIC ---
+function toggleAuthMode() {
     isSignUpMode = !isSignUpMode;
     const title = document.getElementById('auth-header');
+    const subtitle = document.getElementById('auth-subtitle');
     const btn = document.getElementById('auth-submit-btn');
     const link = document.getElementById('toggle-link');
     const hint = document.getElementById('toggle-text');
 
     if (isSignUpMode) {
         title.innerText = "Create Account";
+        subtitle.innerText = "Join the minimalist workspace.";
         btn.innerText = "Register";
         hint.innerText = "Already a member?";
         link.innerText = "Sign In";
     } else {
         title.innerText = "Zen-Notes";
+        subtitle.innerText = "Your thoughts, simplified.";
         btn.innerText = "Sign In";
         hint.innerText = "New here?";
         link.innerText = "Sign Up";
     }
-};
+}
 
-window.handleAuth = function() {
-    const user = document.getElementById('username-input').value.trim();
-    const pass = document.getElementById('password-input').value.trim();
+function handleAuth() {
+    const userIn = document.getElementById('username-input').value.trim();
+    const passIn = document.getElementById('password-input').value.trim();
     
-    if (!user || !pass) return alert("Fields cannot be empty.");
+    if (!userIn || !passIn) {
+        alert("Please enter both a username and password.");
+        return;
+    }
 
     if (isSignUpMode) {
-        localStorage.setItem('zen_user', user);
-        localStorage.setItem('zen_pass', pass);
-        alert("Account Created Locally. Please Sign In.");
-        window.toggleAuthMode();
+        localStorage.setItem('zen_user', userIn);
+        localStorage.setItem('zen_pass', passIn);
+        alert("Success! Account registered. Now please Sign In.");
+        toggleAuthMode();
     } else {
-        if (user === localStorage.getItem('zen_user') && pass === localStorage.getItem('zen_pass')) {
+        const savedUser = localStorage.getItem('zen_user');
+        const savedPass = localStorage.getItem('zen_pass');
+
+        if (userIn === savedUser && passIn === savedPass) {
             document.body.classList.remove('locked');
             initApp();
         } else {
-            alert("Invalid credentials.");
+            alert("Incorrect credentials. (Did you Sign Up first?)");
         }
     }
-};
+}
 
-window.lockVault = function() {
-    document.body.classList.add('locked');
-    document.getElementById('password-input').value = '';
-};
-
-// --- APP CORE ---
+// --- 4. APP FUNCTIONS ---
 function initApp() {
     renderFolders();
     loadFolder(currentFolderId);
@@ -60,20 +81,23 @@ function initApp() {
 
 function renderFolders(filter = "") {
     const list = document.getElementById('folder-list');
+    if (!list) return;
     list.innerHTML = '';
+
     folders.forEach(f => {
         if (f.name.toLowerCase().includes(filter.toLowerCase())) {
             const li = document.createElement('li');
             li.className = f.id === currentFolderId ? 'active' : '';
             li.innerHTML = `
                 <span onclick="loadFolder(${f.id})" style="flex:1">${f.name}</span>
-                <span onclick="deleteFolder(${f.id})" style="opacity:0.4">×</span>
+                <span onclick="deleteFolder(${f.id})" style="opacity:0.3; cursor:pointer">×</span>
             `;
             list.appendChild(li);
         }
     });
 }
 
+// Window scoped for the dynamic list above
 window.loadFolder = function(id) {
     currentFolderId = id;
     const f = folders.find(folder => folder.id === id);
@@ -109,26 +133,30 @@ window.filterFolders = function() {
 
 window.toggleTheme = function() {
     document.body.classList.toggle('dark-theme');
+    localStorage.setItem('zen_theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
 };
 
-// --- DATA PERSISTENCE ---
-document.getElementById('note-area').addEventListener('input', (e) => {
-    const f = folders.find(folder => folder.id === currentFolderId);
-    if (f) {
-        f.notes = e.target.value;
-        save();
-    }
-});
+window.lockVault = function() {
+    document.body.classList.add('locked');
+    document.getElementById('password-input').value = '';
+};
 
 function save() {
-    localStorage.setItem('zen_notes_v5', JSON.stringify(folders));
+    localStorage.setItem('zen_notes_v6', JSON.stringify(folders));
 }
 
 function exportToPDF() {
     window.print();
 }
 
-// Support Enter key for login
-document.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && document.body.classList.contains('locked')) window.handleAuth();
-});
+// Auto-save typing
+const noteArea = document.getElementById('note-area');
+if (noteArea) {
+    noteArea.addEventListener('input', (e) => {
+        const f = folders.find(folder => folder.id === currentFolderId);
+        if (f) {
+            f.notes = e.target.value;
+            save();
+        }
+    });
+}
