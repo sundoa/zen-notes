@@ -16,44 +16,41 @@
             <div class="brand-logo">Z</div>
             <h1>Zen-Notes</h1>
             <p>Your thoughts, simplified.</p>
-            
             <div class="auth-inputs">
                 <input type="text" id="username-input" placeholder="Username">
                 <input type="password" id="password-input" placeholder="Password">
             </div>
-            
             <button class="primary-btn" onclick="handleAuth()" id="auth-submit-btn">Sign In</button>
-            
             <div class="auth-footer">
                 <span id="toggle-text">New here?</span> 
                 <button class="text-link" onclick="toggleAuthMode()" id="toggle-link">Sign Up</button>
             </div>
-            <p id="error-msg" class="error-msg"></p>
         </div>
     </div>
 
     <div id="app-container" class="app-container" style="display: none;">
         <aside class="sidebar">
-            <div class="sidebar-top">
-                <input type="text" id="search-bar" placeholder="Search..." oninput="filterFolders()" class="search-input">
+            <div class="sidebar-section">
+                <input type="text" id="search-bar" placeholder="Search..." oninput="filterFolders()" class="custom-search">
+                
                 <div class="sidebar-header">
                     <span>COLLECTIONS</span>
-                    <button class="add-btn" onclick="addFolder()">+</button>
+                    <button class="custom-add-btn" onclick="addFolder()">+</button>
                 </div>
                 <ul id="folder-list"></ul>
             </div>
             
-            <div class="sidebar-bottom">
-                <button class="ui-btn" onclick="toggleTheme()">🌓 Appearance</button>
-                <button class="ui-btn" onclick="exportToPDF()">📄 Export PDF</button>
-                <button class="logout-link" onclick="location.reload()">Lock Vault</button>
+            <div class="sidebar-section bottom">
+                <button class="menu-item-btn" onclick="toggleTheme()">🌓 Appearance</button>
+                <button class="menu-item-btn" onclick="exportToPDF()">📄 Export PDF</button>
+                <button class="lock-btn" onclick="location.reload()">Lock Vault</button>
             </div>
         </aside>
 
         <main class="main-editor scale-in">
             <header class="editor-nav">
                 <h2 id="current-folder-title">Journal</h2>
-                <div id="save-status">● Synced</div>
+                <div id="save-indicator">● Synced</div>
             </header>
             <textarea id="note-area" placeholder="Start writing..."></textarea>
         </main>
