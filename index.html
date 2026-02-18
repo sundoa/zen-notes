@@ -5,37 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zen-Notes | Minimalist Vault</title>
     <link rel="stylesheet" href="./style.css">
-    <link rel="icon" type="image/png" href="./icon.png">
-    <link rel="manifest" href="./manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-<body id="zen-app" class="dark-theme locked">
+<body id="zen-body" class="dark-theme locked">
 
-    <section id="login-screen" class="screen overlay">
+    <div id="login-screen">
         <div class="glass-card fade-in">
             <div class="brand-logo">Z</div>
             <h1 id="auth-header">Zen-Notes</h1>
             <p id="auth-subtitle">Your thoughts, simplified.</p>
-            
             <div class="auth-inputs">
                 <input type="text" id="username-input" placeholder="Username" autocomplete="off">
                 <input type="password" id="password-input" placeholder="Password">
             </div>
-            
             <button type="button" class="primary-btn" id="auth-submit-btn">Sign In</button>
-            
             <div class="auth-footer">
                 <span id="toggle-text">New here?</span> 
                 <button type="button" class="text-link" id="toggle-link">Sign Up</button>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section id="app-container" class="screen app-layout">
+    <div id="app-container">
         <aside class="sidebar">
             <div class="sidebar-top">
                 <input type="text" id="search-bar" placeholder="Search..." oninput="filterFolders()" class="custom-search">
-                
                 <div class="sidebar-header">
                     <span>COLLECTIONS</span>
                     <button type="button" class="circle-add" onclick="addFolder()">+</button>
@@ -57,7 +51,7 @@
             </header>
             <textarea id="note-area" placeholder="Start writing..."></textarea>
         </main>
-    </section>
+    </div>
 
     <script src="./script.js"></script>
 </body>
