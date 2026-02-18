@@ -4,12 +4,14 @@ body {
     margin: 0;
     font-family: system-ui, sans-serif;
     background: #0f0f0f;
-    color: #fff;
+    color: white;
     height: 100vh;
     display: flex;
 }
 
-.hidden { display: none; }
+.hidden {
+    display: none !important;
+}
 
 /* AUTH */
 
@@ -32,21 +34,13 @@ body {
     gap: 12px;
 }
 
-.auth-card input {
+.auth-card input,
+.auth-card button {
     padding: 10px;
     border-radius: 6px;
     border: 1px solid #333;
     background: #222;
     color: white;
-}
-
-.auth-card button {
-    padding: 10px;
-    border: none;
-    background: #333;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
 }
 
 /* LAYOUT */
@@ -64,11 +58,6 @@ body {
     padding: 12px;
 }
 
-.sidebar-header {
-    display: flex;
-    justify-content: space-between;
-}
-
 .sidebar input {
     margin-top: 10px;
     padding: 8px;
@@ -78,44 +67,7 @@ body {
     color: white;
 }
 
-#folderList {
-    list-style: none;
-    padding: 0;
-    margin-top: 10px;
-    flex: 1;
-    overflow-y: auto;
-}
-
-#folderList li {
-    padding: 8px;
-    cursor: pointer;
-    border-radius: 6px;
-}
-
-#folderList li:hover {
-    background: #2a2a2a;
-}
-
-.sidebar-bottom button {
-    margin-top: 5px;
-}
-
-/* NOTES PANEL */
-
-.notes-panel {
-    width: 240px;
-    background: #141414;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    border-right: 1px solid #222;
-}
-
-.notes-header {
-    display: flex;
-    justify-content: space-between;
-}
-
+#folderList,
 #notesList {
     list-style: none;
     padding: 0;
@@ -124,17 +76,26 @@ body {
     overflow-y: auto;
 }
 
+#folderList li,
 #notesList li {
     padding: 8px;
     border-radius: 6px;
     cursor: pointer;
 }
 
+#folderList li:hover,
 #notesList li:hover {
     background: #2a2a2a;
 }
 
-/* EDITOR */
+.notes-panel {
+    width: 240px;
+    background: #141414;
+    padding: 12px;
+    border-right: 1px solid #222;
+    display: flex;
+    flex-direction: column;
+}
 
 .editor {
     flex: 1;
@@ -143,9 +104,9 @@ body {
 }
 
 .editor-header {
-    padding: 12px;
     display: flex;
     justify-content: space-between;
+    padding: 12px;
     background: #121212;
     border-bottom: 1px solid #222;
 }
@@ -156,10 +117,6 @@ body {
     border-radius: 6px;
     padding: 6px;
     color: white;
-}
-
-.editor-actions button {
-    margin-left: 5px;
 }
 
 textarea {
@@ -196,4 +153,11 @@ textarea {
     background: #1c1c1c;
     padding: 20px;
     border-radius: 8px;
+}
+
+/* LIGHT THEME */
+
+body.light {
+    background: #f5f5f5;
+    color: black;
 }
