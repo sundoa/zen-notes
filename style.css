@@ -1,35 +1,38 @@
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
     font-family: system-ui, sans-serif;
-    background: #111;
-    color: white;
+    background: #0f0f0f;
+    color: #fff;
+    height: 100vh;
+    display: flex;
 }
+
+.hidden { display: none; }
 
 /* AUTH */
 
-.auth-container {
+.auth-screen {
+    position: fixed;
+    inset: 0;
+    background: #0f0f0f;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: #0f0f0f;
 }
 
-.auth-box {
-    background: #1a1a1a;
+.auth-card {
+    background: #1c1c1c;
     padding: 40px;
     border-radius: 12px;
     width: 320px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
-.auth-box input {
+.auth-card input {
     padding: 10px;
     border-radius: 6px;
     border: 1px solid #333;
@@ -37,74 +40,37 @@ body {
     color: white;
 }
 
-.auth-box button {
+.auth-card button {
     padding: 10px;
     border: none;
-    background: #3a3a3a;
+    background: #333;
     color: white;
     border-radius: 6px;
     cursor: pointer;
 }
 
-.auth-box button:hover {
-    background: #555;
-}
+/* LAYOUT */
 
-#toggleAuth {
-    font-size: 14px;
-    cursor: pointer;
-    opacity: 0.7;
-}
-
-#authMessage {
-    font-size: 13px;
-    color: #ff6b6b;
-}
-
-.hidden {
-    display: none;
-}
-
-/* APP LAYOUT */
-
-.app {
+#app {
     display: flex;
-    height: 100vh;
+    width: 100%;
 }
-
-/* SIDEBAR */
 
 .sidebar {
-    width: 260px;
+    width: 240px;
     background: #1a1a1a;
-    padding: 15px;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #222;
+    padding: 12px;
 }
 
-.sidebar-top {
+.sidebar-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
 }
 
-.sidebar h2 {
-    margin: 0;
-    font-size: 18px;
-}
-
-#newFolderBtn {
-    background: #333;
-    border: none;
-    color: white;
-    border-radius: 6px;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-#searchInput {
-    margin-top: 15px;
+.sidebar input {
+    margin-top: 10px;
     padding: 8px;
     border-radius: 6px;
     border: 1px solid #333;
@@ -115,77 +81,119 @@ body {
 #folderList {
     list-style: none;
     padding: 0;
-    margin-top: 15px;
+    margin-top: 10px;
     flex: 1;
     overflow-y: auto;
 }
 
 #folderList li {
     padding: 8px;
-    border-radius: 6px;
     cursor: pointer;
+    border-radius: 6px;
 }
 
 #folderList li:hover {
     background: #2a2a2a;
 }
 
-.logout {
-    background: #2a2a2a;
-    border: none;
-    color: white;
+.sidebar-bottom button {
+    margin-top: 5px;
+}
+
+/* NOTES PANEL */
+
+.notes-panel {
+    width: 240px;
+    background: #141414;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-right: 1px solid #222;
+}
+
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+#notesList {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+#notesList li {
     padding: 8px;
     border-radius: 6px;
     cursor: pointer;
 }
 
+#notesList li:hover {
+    background: #2a2a2a;
+}
+
 /* EDITOR */
 
-.editor-area {
+.editor {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
 .editor-header {
+    padding: 12px;
     display: flex;
     justify-content: space-between;
-    padding: 15px;
-    background: #141414;
+    background: #121212;
     border-bottom: 1px solid #222;
 }
 
-#noteTitle {
+.editor-header input {
     background: #222;
     border: 1px solid #333;
     border-radius: 6px;
-    padding: 8px;
+    padding: 6px;
     color: white;
-    width: 200px;
 }
 
-.editor-buttons button {
-    margin-left: 8px;
-    background: #333;
-    border: none;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
+.editor-actions button {
+    margin-left: 5px;
 }
 
-.editor-buttons button:hover {
-    background: #444;
-}
-
-#noteContent {
+textarea {
     flex: 1;
-    border: none;
-    outline: none;
-    resize: none;
-    padding: 20px;
-    background: #111;
+    background: #0f0f0f;
     color: white;
+    border: none;
+    padding: 20px;
+    resize: none;
     font-size: 15px;
-    line-height: 1.6;
+}
+
+.editor-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #121212;
+    border-top: 1px solid #222;
+    font-size: 13px;
+}
+
+/* MODAL */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #1c1c1c;
+    padding: 20px;
+    border-radius: 8px;
 }
