@@ -1,40 +1,41 @@
 :root {
-    --bg: #0f0f0f;
-    --card-bg: #1a1a1a;
-    --accent: #007aff;
+    --bg: #0d0d0d;
+    --card-bg: #181818;
+    --accent: #0070f3;
     --text: #ffffff;
-    --secondary-text: #a0a0a0;
+    --border: #222;
 }
 
-body, html { margin: 0; padding: 0; height: 100%; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
+body, html { margin: 0; padding: 0; height: 100%; font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
 
-/* Login UI */
+/* Auth Styles */
 .overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.login-card { background: var(--card-bg); padding: 40px; border-radius: 20px; width: 320px; text-align: center; border: 1px solid #222; }
-.brand-icon { width: 60px; height: 60px; background: var(--accent); border-radius: 15px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.5rem; }
-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #252525; color: white; box-sizing: border-box; outline: none; }
-.login-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+.login-card { background: var(--card-bg); padding: 40px; border-radius: 24px; width: 340px; text-align: center; border: 1px solid var(--border); }
+.brand-icon { width: 50px; height: 50px; background: var(--accent); border-radius: 12px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; outline: none; }
+.login-btn { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+.link-btn { background: none; border: none; color: var(--accent); cursor: pointer; font-weight: bold; padding: 0; margin-left: 5px; }
+.error-text { color: #ff453a; font-size: 0.85rem; margin-top: 15px; display: none; }
 
-/* Main App Layout */
+/* App Layout */
 .app-container { display: flex; height: 100vh; }
-.sidebar { width: 260px; background: #151515; border-right: 1px solid #222; display: flex; flex-direction: column; padding: 20px; }
+.sidebar { width: 260px; background: #111; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; }
 .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.add-folder-btn { background: #333; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; }
+.add-btn { background: #333; color: white; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; }
 
 #folder-list { list-style: none; padding: 0; flex: 1; overflow-y: auto; }
-#folder-list li { padding: 12px; margin: 4px 0; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; }
-#folder-list li.active { background: #252525; border-left: 4px solid var(--accent); }
+#folder-list li { padding: 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; margin-bottom: 4px; }
+#folder-list li.active { background: #1a1a1a; border-left: 3px solid var(--accent); }
 
-.editor-pane { flex: 1; display: flex; flex-direction: column; padding: 40px; }
-#note-area { flex: 1; background: transparent; border: none; color: #ccc; font-size: 1.2rem; outline: none; resize: none; line-height: 1.8; }
+.editor { flex: 1; display: flex; flex-direction: column; padding: 40px; }
+#note-area { flex: 1; background: transparent; border: none; color: #ccc; font-size: 1.2rem; outline: none; resize: none; line-height: 1.6; }
 
-.export-btn { background: #222; color: #fff; border: 1px solid #333; width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 10px; }
-.logout-link { background: none; border: none; color: var(--secondary-text); cursor: pointer; width: 100%; font-size: 0.8rem; }
+.secondary-btn { background: #222; color: white; border: 1px solid #333; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 10px; }
+.logout-btn { background: none; border: none; color: #666; cursor: pointer; font-size: 0.8rem; }
 
-/* Print Styles */
+/* PDF Print Logic */
 @media print {
     .sidebar, .overlay { display: none !important; }
-    .editor-pane { padding: 0; width: 100%; }
-    #note-area { color: black !important; background: white !important; font-size: 12pt; }
-    body { background: white !important; }
+    .editor { padding: 0; }
+    #note-area { color: black !important; background: white !important; }
 }
