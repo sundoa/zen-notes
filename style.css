@@ -1,4 +1,4 @@
-/* NUCLEAR RESET: Kills all browser defaults */
+/* NUCLEAR RESET */
 * {
     margin: 0; padding: 0; box-sizing: border-box;
     -webkit-appearance: none !important;
@@ -17,17 +17,19 @@
     --brd: #262626; --in: #1a1a1a; --hvr: #1f1f1f;
 }
 
-body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; transition: background 0.4s ease; }
 
-/* SCREEN SWITCHER LOGIC */
+/* SCREEN SWITCHER */
 .screen { display: none; height: 100vh; width: 100vw; }
 body.locked #login-screen { display: flex; align-items: center; justify-content: center; }
 body:not(.locked) #app-container { display: flex; }
 
 /* LOGIN UI */
+.overlay { position: fixed; inset: 0; z-index: 1000; background: var(--bg); }
 .glass-card { 
     background: var(--side); padding: 40px; border-radius: 28px; 
     width: 320px; text-align: center; border: 1px solid var(--brd);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 .brand-logo { 
     width: 50px; height: 50px; background: var(--acc); color: var(--bg); 
@@ -36,52 +38,56 @@ body:not(.locked) #app-container { display: flex; }
 }
 .auth-inputs input {
     width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px;
-    background: var(--in); color: var(--text); font-size: 14px;
+    background: var(--in); color: var(--text); font-size: 14px; border: 1px solid transparent;
 }
+.auth-inputs input:focus { border-color: var(--brd); }
 .primary-btn {
     width: 100%; padding: 14px; background: var(--acc); color: var(--bg);
-    border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 15px;
+    border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 15px; transition: 0.2s;
 }
+.primary-btn:active { transform: scale(0.97); }
+.text-link { background: none; border: none; color: var(--acc); font-weight: 600; cursor: pointer; margin-left: 5px; }
 
-/* SIDEBAR UI */
+/* WORKSPACE UI */
 .sidebar { 
     width: 260px; background: var(--side); border-right: 1px solid var(--brd);
     display: flex; flex-direction: column; padding: 25px; justify-content: space-between;
 }
-.search-box input {
+.custom-search {
     width: 100%; padding: 12px; border-radius: 12px; background: var(--in);
-    color: var(--text); font-size: 14px;
+    color: var(--text); font-size: 14px; margin-bottom: 20px;
 }
 .sidebar-label {
     display: flex; justify-content: space-between; align-items: center;
-    font-size: 11px; font-weight: 700; color: #777; margin: 25px 0 10px;
+    font-size: 11px; font-weight: 700; color: #777; margin-bottom: 10px;
 }
 .circle-add {
-    width: 22px; height: 22px; background: var(--in); border-radius: 6px;
-    display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text);
+    width: 24px; height: 24px; background: var(--in); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
 }
-
+#folder-list { list-style: none; }
 #folder-list li {
-    padding: 12px; border-radius: 10px; cursor: pointer;
+    padding: 10px 12px; border-radius: 10px; cursor: pointer;
     font-size: 14px; color: #888; margin-bottom: 4px; display: flex; justify-content: space-between;
 }
 #folder-list li.active { background: var(--hvr); color: var(--text); font-weight: 500; }
 
-.nav-btn {
+.menu-item-btn {
     width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid var(--brd);
     border-radius: 12px; color: var(--text); cursor: pointer; text-align: left; font-size: 13px;
 }
-.lock-btn { width: 100%; color: #ff453a; font-size: 12px; cursor: pointer; margin-top: 10px; }
+.lock-btn { width: 100%; color: #ff453a; font-size: 12px; cursor: pointer; margin-top: 10px; opacity: 0.8; }
 
-/* EDITOR UI */
 .editor-space { flex: 1; padding: 60px; display: flex; flex-direction: column; }
+.editor-header { display: flex; justify-content: space-between; align-items: center; }
+#save-indicator { font-size: 12px; color: #888; }
 #note-area {
-    flex: 1; margin-top: 30px; font-size: 1.2rem; line-height: 1.8;
+    flex: 1; margin-top: 40px; font-size: 1.25rem; line-height: 1.8;
     background: transparent; color: var(--text); resize: none; font-weight: 300;
 }
 
 /* ANIMATIONS */
-.fade-in { animation: fadeInUp 0.5s ease forwards; }
-.scale-in { animation: scaleIn 0.4s ease forwards; }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeInUp 0.6s ease forwards; }
+.scale-in { animation: scaleIn 0.5s ease forwards; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes scaleIn { from { opacity: 0; transform: scale(0.99); } to { opacity: 1; transform: scale(1); } }
