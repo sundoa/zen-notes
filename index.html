@@ -2,39 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Minimal Notepad</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notepad</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Notepad</h1>
-            <div class="controls">
-                <button id="clearBtn" class="btn" title="Clear all text">Clear</button>
-                <button id="downloadBtn" class="btn" title="Download as text file">Download</button>
-            </div>
-        </header>
-        
-        <textarea 
-            id="notepad" 
-            placeholder="Start typing..."
-            spellcheck="true"
-            autofocus
-        ></textarea>
-        
-        <footer>
-            <div class="stats">
-                <span id="charCount">0 characters</span>
-                <span class="separator">•</span>
-                <span id="wordCount">0 words</span>
-            </div>
-            <div class="status">
-                <span id="saveStatus">Auto-saved</span>
-            </div>
-        </footer>
+
+<header>
+    <h1>Minimal Notepad</h1>
+    <div class="buttons">
+        <button id="downloadBtn">Download</button>
+        <button id="clearBtn">Clear</button>
     </div>
-    
-    <script src="script.js"></script>
+</header>
+
+<textarea id="note" placeholder="Start typing..."></textarea>
+
+<footer>
+    Auto-saved locally
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
