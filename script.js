@@ -1,29 +1,39 @@
-// Data Initialization
+// 1. Auth & Data
+const PASSWORD = "yourpassword"; // Change this!
 let folders = JSON.parse(localStorage.getItem('zen_notes_data')) || [
-    { id: Date.now(), name: "General Notes", notes: "" }
+    { id: Date.now(), name: "First Folder", notes: "" }
 ];
 let currentFolderId = folders[0].id;
 
-const folderList = document.getElementById('folder-list');
-const noteArea = document.getElementById('note-area');
-const titleDisplay = document.getElementById('current-folder-title');
-const saveStatus = document.getElementById('save-status');
+// 2. Password Check
+function checkPassword() {
+    const input = document.getElementById('password-input').value;
+    if (input === PASSWORD) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app-container').style.display = 'flex';
+        init();
+    } else {
+        alert("Incorrect Password");
+    }
+}
 
+// 3. App Logic
 function init() {
     renderFolders();
     loadFolder(currentFolderId);
 }
 
 function renderFolders() {
-    folderList.innerHTML = '';
+    const list = document.getElementById('folder-list');
+    list.innerHTML = '';
     folders.forEach(f => {
         const li = document.createElement('li');
         li.className = f.id === currentFolderId ? 'active' : '';
         li.innerHTML = `
             <span onclick="loadFolder(${f.id})" style="flex-grow:1">${f.name}</span>
-            <button class="delete-btn" onclick="deleteFolder(${f.id})">×</button>
+            <button onclick="deleteFolder(${f.id})" style="background:none; color:red; border:none; cursor:pointer">×</button>
         `;
-        folderList.appendChild(li);
+        list.appendChild(li);
     });
 }
 
@@ -31,25 +41,25 @@ function loadFolder(id) {
     currentFolderId = id;
     const folder = folders.find(f => f.id === id);
     if (folder) {
-        noteArea.value = folder.notes;
-        titleDisplay.innerText = folder.name;
+        document.getElementById('note-area').value = folder.notes;
+        document.getElementById('current-folder-title').innerText = folder.name;
         renderFolders();
     }
 }
 
 function addFolder() {
-    const name = prompt("Folder name:");
+    const name = prompt("Folder Name:");
     if (name) {
-        const newFolder = { id: Date.now(), name: name, notes: "" };
-        folders.push(newFolder);
+        const newF = { id: Date.now(), name: name, notes: "" };
+        folders.push(newF);
         save();
-        loadFolder(newFolder.id);
+        loadFolder(newF.id);
     }
 }
 
 function deleteFolder(id) {
-    if (folders.length === 1) return alert("You must keep at least one folder!");
-    if (confirm("Delete this folder and all its notes?")) {
+    if (folders.length === 1) return;
+    if (confirm("Delete this folder?")) {
         folders = folders.filter(f => f.id !== id);
         if (currentFolderId === id) currentFolderId = folders[0].id;
         save();
@@ -57,19 +67,14 @@ function deleteFolder(id) {
     }
 }
 
-// Auto-Save Feature
-let saveTimeout;
+// 4. Save & Export
+const noteArea = document.getElementById('note-area');
 noteArea.addEventListener('input', () => {
-    saveStatus.innerText = "Typing...";
-    clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(() => {
-        const folder = folders.find(f => f.id === currentFolderId);
-        if (folder) {
-            folder.notes = noteArea.value;
-            save();
-            saveStatus.innerText = "All saved";
-        }
-    }, 800);
+    const folder = folders.find(f => f.id === currentFolderId);
+    if (folder) {
+        folder.notes = noteArea.value;
+        save();
+    }
 });
 
 function save() {
@@ -77,7 +82,7 @@ function save() {
 }
 
 function exportToPDF() {
-    window.print(); // Browser handles the conversion to PDF
+    // This triggers the browser's print dialog. 
+    // On the popup, you MUST select "Save as PDF" as the destination.
+    window.print();
 }
-
-init();
