@@ -14,8 +14,8 @@
     <div id="login-screen" class="overlay">
         <div class="glass-card fade-in">
             <div class="brand-logo">Z</div>
-            <h1 id="auth-title">Zen-Notes</h1>
-            <p id="auth-desc">Your thoughts, protected.</p>
+            <h1>Zen-Notes</h1>
+            <p>Your thoughts, simplified.</p>
             
             <div class="auth-inputs">
                 <input type="text" id="username-input" placeholder="Username">
@@ -25,7 +25,7 @@
             <button class="primary-btn" onclick="handleAuth()" id="auth-submit-btn">Sign In</button>
             
             <div class="auth-footer">
-                <span id="toggle-text">Need an account?</span> 
+                <span id="toggle-text">New here?</span> 
                 <button class="text-link" onclick="toggleAuthMode()" id="toggle-link">Sign Up</button>
             </div>
             <p id="error-msg" class="error-msg"></p>
@@ -35,29 +35,27 @@
     <div id="app-container" class="app-container" style="display: none;">
         <aside class="sidebar">
             <div class="sidebar-top">
-                <div class="search-wrapper">
-                    <input type="text" id="search-bar" placeholder="Search..." oninput="filterFolders()">
-                </div>
+                <input type="text" id="search-bar" placeholder="Search..." oninput="filterFolders()" class="search-input">
                 <div class="sidebar-header">
-                    <span>FOLDERS</span>
-                    <button class="add-icon-btn" onclick="addFolder()">+</button>
+                    <span>COLLECTIONS</span>
+                    <button class="add-btn" onclick="addFolder()">+</button>
                 </div>
                 <ul id="folder-list"></ul>
             </div>
             
             <div class="sidebar-bottom">
-                <button class="ui-btn" onclick="toggleTheme()">🌓 Theme</button>
-                <button class="ui-btn" onclick="exportToPDF()">📄 Export</button>
-                <button class="logout-btn" onclick="location.reload()">Lock</button>
+                <button class="ui-btn" onclick="toggleTheme()">🌓 Appearance</button>
+                <button class="ui-btn" onclick="exportToPDF()">📄 Export PDF</button>
+                <button class="logout-link" onclick="location.reload()">Lock Vault</button>
             </div>
         </aside>
 
         <main class="main-editor scale-in">
             <header class="editor-nav">
-                <h2 id="current-folder-title">Notes</h2>
+                <h2 id="current-folder-title">Journal</h2>
                 <div id="save-status">● Synced</div>
             </header>
-            <textarea id="note-area" placeholder="Write something..."></textarea>
+            <textarea id="note-area" placeholder="Start writing..."></textarea>
         </main>
     </div>
 
