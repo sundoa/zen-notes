@@ -13,13 +13,18 @@
     <div id="login-screen" class="overlay">
         <div class="login-card">
             <div class="brand-icon">Zen</div>
-            <h1>Welcome Back</h1>
-            <p>Please enter your credentials</p>
+            <h1 id="auth-title">Welcome</h1>
+            <p id="auth-desc">Please sign in to continue</p>
             
             <input type="text" id="username-input" placeholder="Username" autocomplete="off">
             <input type="password" id="password-input" placeholder="Password">
             
-            <button class="login-btn" onclick="checkAuth()">Sign In</button>
+            <button class="login-btn" id="auth-submit" onclick="handleAuth()">Sign In</button>
+            
+            <p id="auth-toggle-text" style="margin-top: 15px; font-size: 0.9rem; color: #a0a0a0;">
+                Don't have an account? <a href="#" onclick="toggleAuthMode()" style="color: #007aff; text-decoration: none;">Sign Up</a>
+            </p>
+            
             <p id="error-msg" style="color: #ff4d4d; font-size: 0.8rem; margin-top: 10px; display: none;">Invalid credentials</p>
         </div>
     </div>
@@ -33,7 +38,7 @@
             <ul id="folder-list"></ul>
             <div class="sidebar-footer">
                 <button class="export-btn" onclick="exportToPDF()">📄 Save as PDF</button>
-                <button class="logout-link" onclick="location.reload()">Lock App</button>
+                <button class="logout-link" onclick="logout()">Lock & Logout</button>
             </div>
         </aside>
 
