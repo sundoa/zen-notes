@@ -1,9 +1,11 @@
+document.addEventListener("DOMContentLoaded", () => {
+
 let currentUser = null;
 let currentFolder = null;
 let currentNote = null;
 let autoSaveEnabled = true;
 
-/* ---------- ELEMENTS ---------- */
+/* ELEMENTS */
 
 const authScreen = document.getElementById("authScreen");
 const app = document.getElementById("app");
@@ -15,7 +17,6 @@ const authError = document.getElementById("authError");
 
 const folderList = document.getElementById("folderList");
 const notesList = document.getElementById("notesList");
-
 const noteTitle = document.getElementById("noteTitle");
 const noteContent = document.getElementById("noteContent");
 
@@ -23,7 +24,9 @@ const wordCount = document.getElementById("wordCount");
 const charCount = document.getElementById("charCount");
 const saveStatus = document.getElementById("saveStatus");
 
-/* ---------- AUTH ---------- */
+const modal = document.getElementById("settingsModal");
+
+/* AUTH */
 
 let isSignup = false;
 
@@ -64,7 +67,7 @@ function startApp() {
     loadFolders();
 }
 
-/* ---------- DATA ---------- */
+/* DATA */
 
 function getUserData() {
     let users = JSON.parse(localStorage.getItem("users")) || {};
@@ -77,7 +80,7 @@ function saveUserData(data) {
     localStorage.setItem("users", JSON.stringify(users));
 }
 
-/* ---------- FOLDERS ---------- */
+/* FOLDERS */
 
 document.getElementById("newFolderBtn").onclick = () => {
     let name = prompt("Folder name:");
@@ -102,13 +105,12 @@ function loadFolders() {
     });
 }
 
-/* ---------- NOTES ---------- */
+/* NOTES */
 
 function loadNotes() {
     notesList.innerHTML = "";
     let data = getUserData();
     let notes = data.folders[currentFolder] || [];
-
     notes.forEach(note => {
         let li = document.createElement("li");
         li.textContent = note.title || "Untitled";
@@ -119,8 +121,7 @@ function loadNotes() {
 
 function openNote(id) {
     let data = getUserData();
-    let notes = data.folders[currentFolder];
-    let note = notes.find(n => n.id === id);
+    let note = data.folders[currentFolder].find(n => n.id === id);
     currentNote = note;
     noteTitle.value = note.title;
     noteContent.value = note.content;
@@ -130,12 +131,7 @@ function openNote(id) {
 document.getElementById("newNoteBtn").onclick = () => {
     if (!currentFolder) return alert("Select folder first.");
     let data = getUserData();
-    let newNote = {
-        id: Date.now(),
-        title: "Untitled",
-        content: "",
-        pinned: false
-    };
+    let newNote = { id: Date.now(), title: "Untitled", content: "" };
     data.folders[currentFolder].push(newNote);
     saveUserData(data);
     loadNotes();
@@ -152,24 +148,7 @@ document.getElementById("deleteNoteBtn").onclick = () => {
     loadNotes();
 };
 
-document.getElementById("downloadBtn").onclick = () => {
-    if (!currentNote) return;
-    const blob = new Blob([noteContent.value], { type: "text/plain" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = (noteTitle.value || "note") + ".txt";
-    link.click();
-};
-
-document.getElementById("clearBtn").onclick = () => {
-    if (!currentNote) return;
-    if (confirm("Clear content?")) {
-        noteContent.value = "";
-        saveNote();
-    }
-};
-
-/* ---------- AUTO SAVE ---------- */
+/* SAVE */
 
 noteContent.addEventListener("input", () => {
     updateCounts();
@@ -184,8 +163,7 @@ function saveNote() {
     if (!currentNote) return;
     saveStatus.textContent = "Saving...";
     let data = getUserData();
-    let notes = data.folders[currentFolder];
-    let note = notes.find(n => n.id === currentNote.id);
+    let note = data.folders[currentFolder].find(n => n.id === currentNote.id);
     note.title = noteTitle.value;
     note.content = noteContent.value;
     saveUserData(data);
@@ -198,15 +176,28 @@ function updateCounts() {
     charCount.textContent = noteContent.value.length + " characters";
 }
 
-/* ---------- THEME ---------- */
+/* DOWNLOAD */
 
-document.getElementById("themeToggle").onclick = () => {
-    document.body.classList.toggle("light");
+document.getElementById("downloadBtn").onclick = () => {
+    if (!currentNote) return;
+    const blob = new Blob([noteContent.value], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = (noteTitle.value || "note") + ".txt";
+    link.click();
 };
 
-/* ---------- SETTINGS ---------- */
+/* CLEAR */
 
-const modal = document.getElementById("settingsModal");
+document.getElementById("clearBtn").onclick = () => {
+    if (!currentNote) return;
+    if (confirm("Clear content?")) {
+        noteContent.value = "";
+        saveNote();
+    }
+};
+
+/* SETTINGS */
 
 document.getElementById("settingsBtn").onclick = () => {
     modal.classList.remove("hidden");
@@ -216,23 +207,33 @@ document.getElementById("closeSettings").onclick = () => {
     modal.classList.add("hidden");
 };
 
+modal.addEventListener("click", (e) => {
+    if (e.target === modal) modal.classList.add("hidden");
+});
+
 document.getElementById("autoSaveToggle").onchange = (e) => {
     autoSaveEnabled = e.target.checked;
 };
 
-/* ---------- LOGOUT ---------- */
+/* THEME */
+
+document.getElementById("themeToggle").onclick = () => {
+    document.body.classList.toggle("light");
+};
+
+/* LOGOUT */
 
 document.getElementById("logoutBtn").onclick = () => {
     localStorage.removeItem("session");
     location.reload();
 };
 
-/* ---------- SESSION RESTORE ---------- */
+/* SESSION RESTORE */
 
-window.onload = () => {
-    let session = localStorage.getItem("session");
-    if (session) {
-        currentUser = session;
-        startApp();
-    }
-};
+let session = localStorage.getItem("session");
+if (session) {
+    currentUser = session;
+    startApp();
+}
+
+});
