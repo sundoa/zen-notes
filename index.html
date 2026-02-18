@@ -3,54 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zen-Notes | Secure Vault</title>
+    <title>Zen-Notes</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" type="image/png" href="./icon.png">
     <link rel="manifest" href="./manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body>
-
-    <div id="login-screen" class="overlay">
-        <div class="login-card">
-            <div class="brand-icon">Zen</div>
-            <h1 id="auth-title">Welcome Back</h1>
-            <p id="auth-desc">Please sign in to access your notes</p>
+<body class="dark-theme"> <div id="login-screen" class="overlay">
+        <div class="glass-card">
+            <div class="brand-logo">Z</div>
+            <h1 id="auth-title">Zen-Notes</h1>
+            <p id="auth-desc">Deep work starts here.</p>
             
-            <div class="input-group">
-                <input type="text" id="username-input" placeholder="Username" autocomplete="off">
+            <div class="auth-inputs">
+                <input type="text" id="username-input" placeholder="Username">
                 <input type="password" id="password-input" placeholder="Password">
             </div>
             
-            <button type="button" class="login-btn" onclick="handleAuth()" id="auth-submit-btn">Sign In</button>
+            <button class="primary-btn" onclick="handleAuth()" id="auth-submit-btn">Sign In</button>
             
             <div class="auth-footer">
-                <span id="toggle-text">Don't have an account?</span> 
-                <button type="button" class="link-btn" onclick="toggleAuthMode()" id="toggle-link">Sign Up</button>
+                <span id="toggle-text">New here?</span> 
+                <button class="text-link" onclick="toggleAuthMode()" id="toggle-link">Create Account</button>
             </div>
-            
-            <p id="error-msg" class="error-text"></p>
+            <p id="error-msg" class="error-msg"></p>
         </div>
     </div>
 
     <div id="app-container" class="app-container" style="display: none;">
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3>Workspace</h3>
-                <button class="add-btn" onclick="addFolder()">+</button>
+            <div class="sidebar-top">
+                <div class="search-wrapper">
+                    <input type="text" id="search-bar" placeholder="Search folders..." oninput="filterFolders()">
+                </div>
+                <div class="sidebar-header">
+                    <span>FOLDERS</span>
+                    <button class="icon-btn" onclick="addFolder()">+</button>
+                </div>
+                <ul id="folder-list"></ul>
             </div>
-            <ul id="folder-list"></ul>
-            <div class="sidebar-footer">
-                <button class="secondary-btn" onclick="exportToPDF()">📄 Export to PDF</button>
-                <button class="logout-btn" onclick="location.reload()">Lock App</button>
+            
+            <div class="sidebar-bottom">
+                <button class="action-btn" onclick="toggleTheme()">🌓 Switch Theme</button>
+                <button class="action-btn" onclick="exportToPDF()">📄 Export PDF</button>
+                <button class="logout-btn" onclick="location.reload()">Lock Vault</button>
             </div>
         </aside>
 
-        <main class="editor">
-            <header class="editor-header">
-                <h2 id="current-folder-title">Notes</h2>
-                <div id="save-status">Synced</div>
+        <main class="main-editor">
+            <header class="editor-nav">
+                <h2 id="current-folder-title">Select Folder</h2>
+                <div id="save-status">● Synced</div>
             </header>
-            <textarea id="note-area" placeholder="Write something peaceful..."></textarea>
+            <textarea id="note-area" placeholder="Write without distraction..."></textarea>
         </main>
     </div>
 
