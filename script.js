@@ -1,32 +1,48 @@
-// CONFIGURATION
-const USER_DATA = {
-    username: "admin",
-    password: "password123"
+// 1. SETTINGS
+const AUTH = {
+    user: "admin", 
+    pass: "password123" 
 };
 
-// DATA HANDLING
+// 2. DATA STORAGE
 let folders = JSON.parse(localStorage.getItem('zen_notes_v2')) || [
-    { id: Date.now(), name: "Unsorted Notes", notes: "" }
+    { id: Date.now(), name: "Main Folder", notes: "" }
 ];
 let currentFolderId = folders[0].id;
 
-// AUTHENTICATION LOGIC
-function checkAuth() {
-    const userIn = document.getElementById('username-input').value;
-    const passIn = document.getElementById('password-input').value;
-    const error = document.getElementById('error-msg');
+// 3. AUTHENTICATION LOGIC
+const loginBtn = document.getElementById('login-button');
+const loginScreen = document.getElementById('login-screen');
+const appContainer = document.getElementById('app-container');
 
-    if (userIn === USER_DATA.username && passIn === USER_DATA.password) {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('app-container').style.display = 'flex';
-        init();
+function checkAuth() {
+    const userVal = document.getElementById('username-input').value;
+    const passVal = document.getElementById('password-input').value;
+    const errorMsg = document.getElementById('error-msg');
+
+    if (userVal === AUTH.user && passVal === AUTH.pass) {
+        loginScreen.style.display = 'none';
+        appContainer.style.display = 'flex';
+        initApp(); // Start the app logic only after login
     } else {
-        error.style.display = 'block';
+        errorMsg.style.display = 'block';
+        // Shake effect or feedback
+        document.querySelector('.login-card').style.border = "1px solid red";
     }
 }
 
-// FOLDER & NOTE LOGIC
-function init() {
+// Trigger login on button click
+loginBtn.addEventListener('click', checkAuth);
+
+// Trigger login on 'Enter' key
+document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && loginScreen.style.display !== 'none') {
+        checkAuth();
+    }
+});
+
+// 4. APP LOGIC
+function initApp() {
     renderFolders();
     loadFolder(currentFolderId);
 }
@@ -39,7 +55,7 @@ function renderFolders() {
         li.className = f.id === currentFolderId ? 'active' : '';
         li.innerHTML = `
             <span onclick="loadFolder(${f.id})" style="flex:1">${f.name}</span>
-            <span onclick="deleteFolder(${f.id})" style="color:#666; font-size:1.2rem">×</span>
+            <span onclick="deleteFolder(${f.id})" class="del-icon">×</span>
         `;
         list.appendChild(li);
     });
@@ -56,11 +72,11 @@ function loadFolder(id) {
 }
 
 function addFolder() {
-    const name = prompt("New Folder Name:");
+    const name = prompt("Folder Name:");
     if (name) {
         const newF = { id: Date.now(), name: name, notes: "" };
         folders.push(newF);
-        save();
+        saveData();
         loadFolder(newF.id);
     }
 }
@@ -70,27 +86,26 @@ function deleteFolder(id) {
     if (confirm("Delete this folder?")) {
         folders = folders.filter(f => f.id !== id);
         if (currentFolderId === id) currentFolderId = folders[0].id;
-        save();
+        saveData();
         loadFolder(currentFolderId);
     }
 }
 
-// AUTO-SAVE
+// 5. AUTO-SAVE & PDF
 document.getElementById('note-area').addEventListener('input', (e) => {
     const folder = folders.find(f => f.id === currentFolderId);
     if (folder) {
         folder.notes = e.target.value;
-        save();
+        saveData();
+        document.getElementById('save-indicator').innerText = "Saving...";
+        setTimeout(() => { document.getElementById('save-indicator').innerText = "Synced"; }, 1000);
     }
 });
 
-function save() {
+function saveData() {
     localStorage.setItem('zen_notes_v2', JSON.stringify(folders));
 }
 
-// PDF EXPORT
 function exportToPDF() {
-    // This will open the system print dialog.
-    // User must select 'Save as PDF' in the printer settings.
     window.print();
 }
