@@ -1,75 +1,70 @@
 let currentUser = null;
-let isSignUp = false;
 let currentFolder = null;
-let currentNoteId = null;
+let currentNote = null;
+let autoSaveEnabled = true;
+
+/* ---------- ELEMENTS ---------- */
 
 const authScreen = document.getElementById("authScreen");
-const appContainer = document.getElementById("appContainer");
+const app = document.getElementById("app");
 
-const authBtn = document.getElementById("authBtn");
+const authButton = document.getElementById("authButton");
 const toggleAuth = document.getElementById("toggleAuth");
 const authTitle = document.getElementById("authTitle");
-const authMessage = document.getElementById("authMessage");
+const authError = document.getElementById("authError");
 
 const folderList = document.getElementById("folderList");
-const newFolderBtn = document.getElementById("newFolderBtn");
-const searchInput = document.getElementById("searchInput");
+const notesList = document.getElementById("notesList");
 
 const noteTitle = document.getElementById("noteTitle");
 const noteContent = document.getElementById("noteContent");
 
-const newNoteBtn = document.getElementById("newNoteBtn");
-const downloadBtn = document.getElementById("downloadBtn");
-const clearBtn = document.getElementById("clearBtn");
-const logoutBtn = document.getElementById("logoutBtn");
+const wordCount = document.getElementById("wordCount");
+const charCount = document.getElementById("charCount");
+const saveStatus = document.getElementById("saveStatus");
 
 /* ---------- AUTH ---------- */
 
-toggleAuth.addEventListener("click", () => {
-    isSignUp = !isSignUp;
-    authTitle.textContent = isSignUp ? "Sign Up" : "Sign In";
-    authBtn.textContent = isSignUp ? "Create Account" : "Sign In";
-    toggleAuth.textContent = isSignUp
-        ? "Already have an account? Sign In"
-        : "Don't have an account? Sign Up";
-});
+let isSignup = false;
 
-authBtn.addEventListener("click", () => {
+toggleAuth.onclick = () => {
+    isSignup = !isSignup;
+    authTitle.textContent = isSignup ? "Sign Up" : "Sign In";
+    authButton.textContent = isSignup ? "Create Account" : "Sign In";
+};
+
+authButton.onclick = () => {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    if (!username || !password) {
-        authMessage.textContent = "Fill all fields.";
-        return;
-    }
-
     let users = JSON.parse(localStorage.getItem("users")) || {};
 
-    if (isSignUp) {
+    if (isSignup) {
         if (users[username]) {
-            authMessage.textContent = "User already exists.";
+            authError.textContent = "User exists.";
             return;
         }
         users[username] = { password, folders: {} };
         localStorage.setItem("users", JSON.stringify(users));
-        authMessage.textContent = "Account created!";
+        authError.textContent = "Account created!";
     } else {
         if (!users[username] || users[username].password !== password) {
-            authMessage.textContent = "Invalid credentials.";
+            authError.textContent = "Invalid login.";
             return;
         }
         currentUser = username;
+        localStorage.setItem("session", username);
         startApp();
     }
-});
-
-/* ---------- APP ---------- */
+};
 
 function startApp() {
     authScreen.classList.add("hidden");
-    appContainer.classList.remove("hidden");
+    app.classList.remove("hidden");
     loadFolders();
 }
+
+/* ---------- DATA ---------- */
 
 function getUserData() {
     let users = JSON.parse(localStorage.getItem("users")) || {};
@@ -84,22 +79,20 @@ function saveUserData(data) {
 
 /* ---------- FOLDERS ---------- */
 
-newFolderBtn.addEventListener("click", () => {
-    const name = prompt("Folder name:");
+document.getElementById("newFolderBtn").onclick = () => {
+    let name = prompt("Folder name:");
     if (!name) return;
-
     let data = getUserData();
     data.folders[name] = [];
     saveUserData(data);
     loadFolders();
-});
+};
 
 function loadFolders() {
     folderList.innerHTML = "";
     let data = getUserData();
-
     Object.keys(data.folders).forEach(folder => {
-        const li = document.createElement("li");
+        let li = document.createElement("li");
         li.textContent = folder;
         li.onclick = () => {
             currentFolder = folder;
@@ -112,91 +105,134 @@ function loadFolders() {
 /* ---------- NOTES ---------- */
 
 function loadNotes() {
+    notesList.innerHTML = "";
+    let data = getUserData();
+    let notes = data.folders[currentFolder] || [];
+
+    notes.forEach(note => {
+        let li = document.createElement("li");
+        li.textContent = note.title || "Untitled";
+        li.onclick = () => openNote(note.id);
+        notesList.appendChild(li);
+    });
+}
+
+function openNote(id) {
+    let data = getUserData();
+    let notes = data.folders[currentFolder];
+    let note = notes.find(n => n.id === id);
+    currentNote = note;
+    noteTitle.value = note.title;
+    noteContent.value = note.content;
+    updateCounts();
+}
+
+document.getElementById("newNoteBtn").onclick = () => {
+    if (!currentFolder) return alert("Select folder first.");
+    let data = getUserData();
+    let newNote = {
+        id: Date.now(),
+        title: "Untitled",
+        content: "",
+        pinned: false
+    };
+    data.folders[currentFolder].push(newNote);
+    saveUserData(data);
+    loadNotes();
+};
+
+document.getElementById("deleteNoteBtn").onclick = () => {
+    if (!currentNote) return;
+    let data = getUserData();
+    data.folders[currentFolder] =
+        data.folders[currentFolder].filter(n => n.id !== currentNote.id);
+    saveUserData(data);
     noteTitle.value = "";
     noteContent.value = "";
-}
+    loadNotes();
+};
 
-newNoteBtn.addEventListener("click", () => {
-    if (!currentFolder) return alert("Select folder first.");
-    currentNoteId = Date.now();
-    saveNote();
-});
-
-noteContent.addEventListener("input", saveNote);
-noteTitle.addEventListener("input", saveNote);
-
-function saveNote() {
-    if (!currentFolder) return;
-
-    let data = getUserData();
-    let folder = data.folders[currentFolder];
-
-    let existing = folder.find(n => n.id === currentNoteId);
-
-    if (existing) {
-        existing.title = noteTitle.value;
-        existing.content = noteContent.value;
-    } else {
-        folder.push({
-            id: currentNoteId,
-            title: noteTitle.value,
-            content: noteContent.value
-        });
-    }
-
-    saveUserData(data);
-}
-
-/* ---------- SEARCH ---------- */
-
-searchInput.addEventListener("input", () => {
-    const query = searchInput.value.toLowerCase();
-    let data = getUserData();
-    folderList.innerHTML = "";
-
-    Object.keys(data.folders).forEach(folder => {
-        let notes = data.folders[folder];
-        let match = notes.some(note =>
-            note.title.toLowerCase().includes(query) ||
-            note.content.toLowerCase().includes(query)
-        );
-
-        if (match || folder.toLowerCase().includes(query)) {
-            const li = document.createElement("li");
-            li.textContent = folder;
-            li.onclick = () => {
-                currentFolder = folder;
-                loadNotes();
-            };
-            folderList.appendChild(li);
-        }
-    });
-});
-
-/* ---------- DOWNLOAD ---------- */
-
-downloadBtn.addEventListener("click", () => {
+document.getElementById("downloadBtn").onclick = () => {
+    if (!currentNote) return;
     const blob = new Blob([noteContent.value], { type: "text/plain" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = (noteTitle.value || "note") + ".txt";
     link.click();
-    URL.revokeObjectURL(link.href);
-});
+};
 
-/* ---------- CLEAR ---------- */
-
-clearBtn.addEventListener("click", () => {
-    if (confirm("Clear this note?")) {
+document.getElementById("clearBtn").onclick = () => {
+    if (!currentNote) return;
+    if (confirm("Clear content?")) {
         noteContent.value = "";
         saveNote();
     }
+};
+
+/* ---------- AUTO SAVE ---------- */
+
+noteContent.addEventListener("input", () => {
+    updateCounts();
+    if (autoSaveEnabled) saveNote();
 });
+
+noteTitle.addEventListener("input", () => {
+    if (autoSaveEnabled) saveNote();
+});
+
+function saveNote() {
+    if (!currentNote) return;
+    saveStatus.textContent = "Saving...";
+    let data = getUserData();
+    let notes = data.folders[currentFolder];
+    let note = notes.find(n => n.id === currentNote.id);
+    note.title = noteTitle.value;
+    note.content = noteContent.value;
+    saveUserData(data);
+    saveStatus.textContent = "Saved";
+}
+
+function updateCounts() {
+    let words = noteContent.value.trim().split(/\s+/).filter(Boolean);
+    wordCount.textContent = words.length + " words";
+    charCount.textContent = noteContent.value.length + " characters";
+}
+
+/* ---------- THEME ---------- */
+
+document.getElementById("themeToggle").onclick = () => {
+    document.body.classList.toggle("light");
+};
+
+/* ---------- SETTINGS ---------- */
+
+const modal = document.getElementById("settingsModal");
+
+document.getElementById("settingsBtn").onclick = () => {
+    modal.classList.remove("hidden");
+};
+
+document.getElementById("closeSettings").onclick = () => {
+    modal.classList.add("hidden");
+};
+
+document.getElementById("autoSaveToggle").onchange = (e) => {
+    autoSaveEnabled = e.target.checked;
+};
 
 /* ---------- LOGOUT ---------- */
 
-logoutBtn.addEventListener("click", () => {
-    currentUser = null;
-    appContainer.classList.add("hidden");
-    authScreen.classList.remove("hidden");
-});
+document.getElementById("logoutBtn").onclick = () => {
+    localStorage.removeItem("session");
+    location.reload();
+};
+
+/* ---------- SESSION RESTORE ---------- */
+
+window.onload = () => {
+    let session = localStorage.getItem("session");
+    if (session) {
+        currentUser = session;
+        startApp();
+    }
+};
