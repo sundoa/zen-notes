@@ -7,13 +7,15 @@
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" type="image/png" href="./icon.png">
     <link rel="manifest" href="./manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-<body class="dark-theme"> <div id="login-screen" class="overlay">
-        <div class="glass-card">
+<body class="dark-theme">
+
+    <div id="login-screen" class="overlay">
+        <div class="glass-card fade-in">
             <div class="brand-logo">Z</div>
             <h1 id="auth-title">Zen-Notes</h1>
-            <p id="auth-desc">Deep work starts here.</p>
+            <p id="auth-desc">Your thoughts, protected.</p>
             
             <div class="auth-inputs">
                 <input type="text" id="username-input" placeholder="Username">
@@ -23,8 +25,8 @@
             <button class="primary-btn" onclick="handleAuth()" id="auth-submit-btn">Sign In</button>
             
             <div class="auth-footer">
-                <span id="toggle-text">New here?</span> 
-                <button class="text-link" onclick="toggleAuthMode()" id="toggle-link">Create Account</button>
+                <span id="toggle-text">Need an account?</span> 
+                <button class="text-link" onclick="toggleAuthMode()" id="toggle-link">Sign Up</button>
             </div>
             <p id="error-msg" class="error-msg"></p>
         </div>
@@ -34,28 +36,28 @@
         <aside class="sidebar">
             <div class="sidebar-top">
                 <div class="search-wrapper">
-                    <input type="text" id="search-bar" placeholder="Search folders..." oninput="filterFolders()">
+                    <input type="text" id="search-bar" placeholder="Search..." oninput="filterFolders()">
                 </div>
                 <div class="sidebar-header">
                     <span>FOLDERS</span>
-                    <button class="icon-btn" onclick="addFolder()">+</button>
+                    <button class="add-icon-btn" onclick="addFolder()">+</button>
                 </div>
                 <ul id="folder-list"></ul>
             </div>
             
             <div class="sidebar-bottom">
-                <button class="action-btn" onclick="toggleTheme()">🌓 Switch Theme</button>
-                <button class="action-btn" onclick="exportToPDF()">📄 Export PDF</button>
-                <button class="logout-btn" onclick="location.reload()">Lock Vault</button>
+                <button class="ui-btn" onclick="toggleTheme()">🌓 Theme</button>
+                <button class="ui-btn" onclick="exportToPDF()">📄 Export</button>
+                <button class="logout-btn" onclick="location.reload()">Lock</button>
             </div>
         </aside>
 
-        <main class="main-editor">
+        <main class="main-editor scale-in">
             <header class="editor-nav">
-                <h2 id="current-folder-title">Select Folder</h2>
+                <h2 id="current-folder-title">Notes</h2>
                 <div id="save-status">● Synced</div>
             </header>
-            <textarea id="note-area" placeholder="Write without distraction..."></textarea>
+            <textarea id="note-area" placeholder="Write something..."></textarea>
         </main>
     </div>
 
