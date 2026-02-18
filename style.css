@@ -1,61 +1,65 @@
-/* RESET EVERYTHING */
-* { margin: 0; padding: 0; box-sizing: border-box; outline: none; border: none; -webkit-appearance: none; appearance: none; }
+/* 1. RESET */
+* { 
+    margin: 0; padding: 0; box-sizing: border-box; 
+    appearance: none !important; -webkit-appearance: none !important;
+    outline: none; border: none;
+}
 
-/* DEFAULT LIGHT THEME COLORS */
+/* 2. THE SHADER VARIABLES */
 :root {
-    --bg: #f2f2f7; --side: #ffffff; --text: #1c1c1e; --btn-bg: #e5e5ea; --brd: #d1d1d6; --danger: #ff3b30;
+    --bg: #f2f2f7;
+    --side: #ffffff;
+    --text: #1c1c1e;
+    --btn-fill: #e5e5ea; /* Light Mode Button Color */
+    --border-color: #d1d1d6;
+    --danger: #ff3b30;
 }
 
-/* DARK THEME OVERRIDES */
 .dark-theme {
-    --bg: #000000; --side: #1c1c1e; --text: #ffffff; --btn-bg: #2c2c2e; --brd: #3a3a3c; --danger: #ff453a;
+    --bg: #000000;
+    --side: #1c1c1e;
+    --text: #ffffff;
+    --btn-fill: #2c2c2e; /* Dark Mode Button Color */
+    --border-color: #3a3a3c;
+    --danger: #ff453a;
 }
 
-body { font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; transition: 0.3s; }
+body { 
+    font-family: 'Inter', sans-serif; 
+    background: var(--bg); 
+    color: var(--text); 
+    transition: background 0.3s ease, color 0.3s ease;
+}
 
-/* SCREEN SWITCHER (FAIL-SAFE) */
-#login-screen, #app-container { width: 100vw; height: 100vh; display: none; }
+/* 3. LAYOUT (Structure stays the same) */
+#login-screen, #app-container { height: 100vh; width: 100vw; }
 
-/* When locked: Show login, hide app */
-body.locked #login-screen { display: flex; align-items: center; justify-content: center; background: var(--bg); }
-body.locked #app-container { display: none !important; }
+body.locked #login-screen { display: flex; align-items: center; justify-content: center; }
+body.locked #app-container { display: none; }
 
-/* When unlocked: Hide login, show app */
-body:not(.locked) #login-screen { display: none !important; }
-body:not(.locked) #app-container { display: flex; background: var(--bg); }
+body:not(.locked) #login-screen { display: none; }
+body:not(.locked) #app-container { display: flex; }
 
-/* SIDEBAR & BUTTON THEMING */
+/* 4. THE BUTTONS (Shaders applied here) */
 .sidebar { 
-    width: 260px; background: var(--side); border-right: 1px solid var(--brd);
-    display: flex; flex-direction: column; padding: 25px; justify-content: space-between;
+    width: 260px; 
+    background: var(--side); 
+    border-right: 1px solid var(--border-color);
+    display: flex; 
+    flex-direction: column; 
+    padding: 25px; 
+    justify-content: space-between;
 }
 
 .menu-item-btn {
-    width: 100%; padding: 12px; margin-bottom: 8px; border-radius: 12px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: left;
-    background: var(--btn-bg); color: var(--text); border: 1px solid var(--brd);
-    transition: background 0.3s, color 0.3s;
-}
-.menu-item-btn:hover { filter: brightness(1.2); }
-
-.lock-btn { width: 100%; background: none; color: var(--danger); font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 15px; text-align: center; }
-
-/* EDITOR UI */
-.editor-space { flex: 1; padding: 60px; display: flex; flex-direction: column; }
-#note-area { flex: 1; margin-top: 40px; font-size: 1.25rem; line-height: 1.8; background: transparent; color: var(--text); resize: none; font-weight: 300; }
-
-/* MISC UI */
-.glass-card { background: var(--side); padding: 40px; border-radius: 28px; width: 320px; text-align: center; border: 1px solid var(--brd); color: var(--text); }
-.brand-logo { width: 50px; height: 50px; background: var(--text); color: var(--side); border-radius: 12px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-.auth-inputs input { width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px; background: var(--btn-bg); color: var(--text); }
-.primary-btn { width: 100%; padding: 14px; background: var(--text); color: var(--side); border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 15px; }
-.text-link { color: var(--text); background: none; font-weight: 700; cursor: pointer; margin-left: 5px; }
-
-/* FOLDER LIST */
-#folder-list li { padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 14px; color: var(--text); opacity: 0.6; margin-bottom: 4px; display: flex; justify-content: space-between; }
-#folder-list li.active { background: var(--btn-bg); opacity: 1; font-weight: 600; }
-
-/* ANIMATIONS */
-.fade-in { animation: fadeIn 0.6s ease forwards; }
-.scale-in { animation: scaleIn 0.5s ease forwards; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes scaleIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+    width: 100%; 
+    padding: 12px; 
+    margin-bottom: 8px; 
+    border-radius: 12px; 
+    font-size: 13px; 
+    font-weight: 500; 
+    cursor: pointer; 
+    text-align: left;
+    /* This is the secret: using the variables for fill */
+    background: var(--btn-fill) !important; 
+    color:
