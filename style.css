@@ -1,4 +1,4 @@
-/* 1. THE NUCLEAR RESET */
+/* NUCLEAR RESET */
 * {
     margin: 0; padding: 0; box-sizing: border-box;
     -webkit-appearance: none !important;
@@ -7,71 +7,102 @@
     border: none;
 }
 
-/* 2. THEME VARIABLES */
 :root {
-    --bg: #f2f2f7;      /* Light Grey */
-    --side: #ffffff;    /* Pure White */
-    --text: #1c1c1e;    /* Near Black */
-    --btn-bg: #e5e5ea;  /* Visible Grey Button */
-    --brd: #d1d1d6;
-    --acc: #007aff;
-    --danger: #ff3b30;
+    --bg: #f9f9f9; --side: #ffffff; --text: #111; --acc: #111;
+    --brd: #e5e5e5; --in: #f0f0f0; --hvr: #ebebeb;
+    --danger: #d70000; /* Rich red for light mode */
 }
 
 .dark-theme {
-    --bg: #000000;      /* Pure Black */
-    --side: #1c1c1e;    /* Dark Charcoal */
-    --text: #ffffff;    /* Pure White */
-    --btn-bg: #2c2c2e;  /* Dark Button */
-    --brd: #3a3a3c;
-    --acc: #0a84ff;
-    --danger: #ff453a;
+    --bg: #0a0a0a; --side: #111; --text: #eee; --acc: #fff;
+    --brd: #262626; --in: #1a1a1a; --hvr: #1f1f1f;
+    --danger: #ff453a; /* Vibrant red for dark mode */
 }
 
 body { 
     font-family: 'Inter', sans-serif; 
     background: var(--bg); color: var(--text); 
     height: 100vh; overflow: hidden; 
-    transition: background 0.3s ease, color 0.3s ease;
+    transition: background 0.4s ease, color 0.4s ease;
 }
 
-/* 3. SCREEN SYSTEM */
+/* SCREEN SYSTEM */
 .screen { display: none; height: 100vh; width: 100vw; }
 body.locked #login-screen { display: flex; align-items: center; justify-content: center; }
-body:not(.locked) #app-container { display: flex; }
+body:not(.locked) #app-container) { display: flex; }
 
-/* 4. SIDEBAR & BUTTONS (The Fix) */
+/* VAULT UI */
+.overlay { position: fixed; inset: 0; z-index: 1000; background: var(--bg); }
+.glass-card { 
+    background: var(--side); padding: 40px; border-radius: 28px; 
+    width: 320px; text-align: center; border: 1px solid var(--brd);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+.brand-logo { 
+    width: 50px; height: 50px; background: var(--acc); color: var(--bg); 
+    border-radius: 12px; margin: 0 auto 15px; display: flex; 
+    align-items: center; justify-content: center; font-weight: 700;
+}
+.auth-inputs input {
+    width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px;
+    background: var(--in); color: var(--text); font-size: 14px;
+    border: 1px solid transparent;
+}
+.primary-btn {
+    width: 100%; padding: 14px; background: var(--acc); color: var(--bg);
+    border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 15px;
+    transition: transform 0.1s;
+}
+
+/* SIDEBAR UI - FIXED THEME BUTTONS */
 .sidebar { 
     width: 260px; background: var(--side); border-right: 1px solid var(--brd);
     display: flex; flex-direction: column; padding: 25px; justify-content: space-between;
+    transition: background 0.4s ease, border 0.4s ease;
 }
 
+/* These buttons now explicitly use theme variables */
 .menu-item-btn {
     width: 100%; padding: 12px; margin-bottom: 8px; 
-    background: var(--btn-bg) !important; /* Forces the theme color */
-    color: var(--text) !important;         /* Forces the theme text */
+    background: var(--in); /* Subtle fill */
     border: 1px solid var(--brd);
     border-radius: 12px; 
-    cursor: pointer; text-align: left; font-size: 13px; font-weight: 500;
-    transition: transform 0.1s, background 0.2s;
+    color: var(--text); /* Changes with theme */
+    cursor: pointer; text-align: left; font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
-.menu-item-btn:hover { filter: brightness(1.1); }
-.menu-item-btn:active { transform: scale(0.98); }
+.menu-item-btn:hover { 
+    background: var(--hvr); 
+    border-color: var(--text); 
+}
 
 .lock-btn { 
-    width: 100%; background: none;
-    color: var(--danger) !important; 
-    font-size: 12px; font-weight: 600; cursor: pointer; 
-    margin-top: 10px; text-align: center;
+    width: 100%; 
+    background: none;
+    color: var(--danger); /* Theme-aware red */
+    font-size: 12px; 
+    font-weight: 600;
+    cursor: pointer; 
+    margin-top: 10px; 
+    opacity: 0.8; 
+    transition: opacity 0.2s;
 }
 
-/* 5. FOLDER LIST */
+.lock-btn:hover { opacity: 1; text-decoration: underline; }
+
+/* FOLDER LIST */
 #folder-list li {
     padding: 10px 12px; border-radius: 10px; cursor: pointer;
     font-size: 14px; color: var(--text); opacity: 0.6; margin-bottom: 4px; display: flex; justify-content: space-between;
+    transition: 0.2s;
 }
-#folder-list li.active { background: var(--btn-bg); opacity: 1; font-weight: 600; border: 1px solid var(--brd); }
+#folder-list li.active { background: var(--hvr); opacity: 1; font-weight: 600; }
 
-/* 6. VAULT & EDITOR */
-.overlay { position: fixed; inset: 0; z-index:
+/* EDITOR UI */
+.editor-space { flex: 1; padding: 60px; display: flex; flex-direction: column; }
+#note-area {
+    flex: 1; margin-top: 40px; font-size: 1.25rem; line-height: 1.8;
+    background: transparent; color: var(--text); resize: none; font-weight: 300;
+}
