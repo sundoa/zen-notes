@@ -3,56 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zen-Notes | Minimalist Vault</title>
-    <link rel="stylesheet" href="./style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Zen-Notes | Professional Minimalist Workspace</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
 </head>
-<body id="zen-body" class="dark-theme locked">
+<body class="dark-theme locked">
 
-    <div id="login-screen">
-        <div class="glass-card fade-in">
-            <div class="brand-logo">Z</div>
-            <h1 id="auth-header">Zen-Notes</h1>
-            <p id="auth-subtitle">Your thoughts, simplified.</p>
-            <div class="auth-inputs">
-                <input type="text" id="username-input" placeholder="Username" autocomplete="off">
-                <input type="password" id="password-input" placeholder="Password">
-            </div>
-            <button type="button" class="primary-btn" id="auth-submit-btn">Sign In</button>
-            <div class="auth-footer">
-                <span id="toggle-text">New here?</span> 
-                <button type="button" class="text-link" id="toggle-link">Sign Up</button>
-            </div>
+    <div id="vault-overlay">
+        <div class="auth-box fade-in">
+            <header class="auth-header">
+                <div class="zen-logo">Z</div>
+                <h1 id="auth-title">Zen-Notes Vault</h1>
+                <p id="auth-desc">Secure your thoughts with local encryption.</p>
+            </header>
+
+            <form id="auth-form" onsubmit="return false;">
+                <div class="input-group">
+                    <label>IDENTIFIER</label>
+                    <input type="text" id="username-field" placeholder="Username" autocomplete="username">
+                </div>
+                <div class="input-group">
+                    <label>ACCESS KEY</label>
+                    <input type="password" id="password-field" placeholder="••••••••" autocomplete="current-password">
+                </div>
+                <button type="submit" id="auth-main-btn">Sign In</button>
+            </form>
+
+            <footer class="auth-footer">
+                <p id="toggle-hint">First time here?</p>
+                <button id="auth-toggle-link">Initialize New Account</button>
+            </footer>
         </div>
     </div>
 
-    <div id="app-container">
-        <aside class="sidebar">
+    <div id="workspace">
+        <aside id="sidebar">
             <div class="sidebar-top">
-                <input type="text" id="search-bar" placeholder="Search..." oninput="filterFolders()" class="custom-search">
-                <div class="sidebar-header">
-                    <span>COLLECTIONS</span>
-                    <button type="button" class="circle-add" onclick="addFolder()">+</button>
+                <div class="search-container">
+                    <input type="text" id="folder-search" placeholder="Search collections..." oninput="handleSearch()">
                 </div>
-                <ul id="folder-list"></ul>
+                
+                <nav class="collections-nav">
+                    <div class="section-header">
+                        <span>COLLECTIONS</span>
+                        <button class="add-btn" onclick="createNewFolder()" title="New Collection">+</button>
+                    </div>
+                    <ul id="folder-list">
+                        </ul>
+                </nav>
             </div>
-            
+
             <div class="sidebar-bottom">
-                <button type="button" class="menu-item-btn" onclick="toggleTheme()">🌓 Appearance</button>
-                <button type="button" class="menu-item-btn" onclick="exportToPDF()">📄 Export PDF</button>
-                <button type="button" class="lock-btn" onclick="lockVault()">Lock Vault</button>
+                <div class="utility-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Words:</span>
+                        <span id="word-count">0</span>
+                    </div>
+                </div>
+                <div class="system-controls">
+                    <button class="sys-btn" onclick="toggleInterfaceTheme()">
+                        <span class="icon">🌓</span> Appearance
+                    </button>
+                    <button class="sys-btn" onclick="generatePDF()">
+                        <span class="icon">📄</span> Export to PDF
+                    </button>
+                    <button class="sys-btn lock-trigger" onclick="forceLock()">
+                        <span class="icon">🔒</span> Lock Workspace
+                    </button>
+                </div>
             </div>
         </aside>
 
-        <main class="editor-space scale-in">
-            <header class="editor-header">
-                <h2 id="current-folder-title">Journal</h2>
-                <div id="save-indicator">● Synced</div>
+        <main id="editor-container">
+            <header class="editor-bar">
+                <div class="editor-info">
+                    <h2 id="active-folder-name">Daily Journal</h2>
+                    <span id="sync-status">● System Synced</span>
+                </div>
+                <div class="editor-actions">
+                    <button class="action-btn" onclick="clearCurrentNote()">Clear</button>
+                    <button class="action-btn primary" onclick="manualSave()">Save</button>
+                </div>
             </header>
-            <textarea id="note-area" placeholder="Start writing..."></textarea>
+            
+            <div class="textarea-wrapper">
+                <textarea id="main-editor" placeholder="Start typing your masterpiece..."></textarea>
+            </div>
+            
+            <footer class="editor-footer">
+                <span id="char-count">0 characters</span>
+                <span id="last-saved">Last saved: Just now</span>
+            </footer>
         </main>
     </div>
 
-    <script src="./script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
