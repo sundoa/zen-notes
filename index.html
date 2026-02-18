@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zen-Notes | Secure Login</title>
+    <title>Zen-Notes | Secure Workspace</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" type="image/png" href="./icon.png">
     <link rel="manifest" href="./manifest.json">
@@ -13,36 +13,33 @@
     <div id="login-screen" class="overlay">
         <div class="login-card">
             <div class="brand-icon">Zen</div>
-            <h1>Welcome Back</h1>
-            <p>Please enter your credentials</p>
-            
-            <input type="text" id="username-input" placeholder="Username">
+            <h1>Welcome</h1>
+            <input type="text" id="username-input" placeholder="Username" autocomplete="off">
             <input type="password" id="password-input" placeholder="Password">
-            
-            <button class="login-btn" onclick="checkAuth()">Sign In</button>
-            <p id="error-msg" style="color: #ff4d4d; font-size: 0.8rem; margin-top: 10px; display: none;">Invalid credentials</p>
+            <button class="login-btn" id="login-button">Sign In</button>
+            <p id="error-msg" style="color: #ff4d4d; font-size: 0.8rem; margin-top: 10px; display: none;">Access Denied</p>
         </div>
     </div>
 
     <div id="app-container" class="app-container" style="display: none;">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h3>Workspace</h3>
+                <h3>Folders</h3>
                 <button class="add-folder-btn" onclick="addFolder()">+</button>
             </div>
             <ul id="folder-list"></ul>
             <div class="sidebar-footer">
                 <button class="export-btn" onclick="exportToPDF()">📄 Save as PDF</button>
-                <button class="logout-link" onclick="location.reload()">Logout</button>
+                <button class="logout-link" onclick="location.reload()">Lock App</button>
             </div>
         </aside>
 
         <main class="editor-pane">
             <div class="editor-header">
                 <h2 id="current-folder-title">Select a folder</h2>
-                <span id="save-indicator">Synced</span>
+                <span id="save-indicator">Ready</span>
             </div>
-            <textarea id="note-area" placeholder="Write your thoughts here..."></textarea>
+            <textarea id="note-area" placeholder="Start typing your thoughts..."></textarea>
         </main>
     </div>
 
