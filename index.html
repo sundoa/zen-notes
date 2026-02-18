@@ -1,56 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Advanced Minimal Notepad</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notepad Pro</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- AUTH SCREEN -->
-<div id="authScreen" class="auth-container">
-    <div class="auth-box">
+<div id="authScreen" class="auth-screen">
+    <div class="auth-card">
         <h2 id="authTitle">Sign In</h2>
-
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
-
-        <button id="authBtn">Sign In</button>
-        <p id="toggleAuth">Don't have an account? Sign Up</p>
-        <p id="authMessage"></p>
+        <button id="authButton">Sign In</button>
+        <p id="toggleAuth">No account? Sign Up</p>
+        <p id="authError"></p>
     </div>
 </div>
 
 <!-- MAIN APP -->
-<div id="appContainer" class="app hidden">
+<div id="app" class="hidden">
 
+    <!-- SIDEBAR -->
     <aside class="sidebar">
-        <div class="sidebar-top">
-            <h2>Folders</h2>
+
+        <div class="sidebar-header">
+            <h3>Folders</h3>
             <button id="newFolderBtn">+</button>
         </div>
 
-        <input type="text" id="searchInput" placeholder="Search notes...">
+        <input type="text" id="searchInput" placeholder="Search everything...">
 
         <ul id="folderList"></ul>
 
-        <button id="logoutBtn" class="logout">Logout</button>
+        <div class="sidebar-bottom">
+            <button id="themeToggle">Toggle Theme</button>
+            <button id="settingsBtn">Settings</button>
+            <button id="logoutBtn">Logout</button>
+        </div>
+
     </aside>
 
-    <main class="editor-area">
-        <header class="editor-header">
-            <input type="text" id="noteTitle" placeholder="Note title">
-            <div class="editor-buttons">
+    <!-- NOTES PANEL -->
+    <section class="notes-panel">
+        <div class="notes-header">
+            <h3 id="currentFolderTitle">Select Folder</h3>
+            <button id="newNoteBtn">New Note</button>
+        </div>
+        <ul id="notesList"></ul>
+    </section>
+
+    <!-- EDITOR -->
+    <main class="editor">
+
+        <div class="editor-header">
+            <input type="text" id="noteTitle" placeholder="Untitled Note">
+            <div class="editor-actions">
+                <button id="pinNoteBtn">Pin</button>
                 <button id="downloadBtn">Download</button>
                 <button id="clearBtn">Clear</button>
-                <button id="newNoteBtn">New Note</button>
+                <button id="deleteNoteBtn">Delete</button>
             </div>
-        </header>
+        </div>
 
         <textarea id="noteContent" placeholder="Start writing..."></textarea>
+
+        <div class="editor-footer">
+            <span id="wordCount">0 words</span>
+            <span id="charCount">0 characters</span>
+            <span id="saveStatus">Saved</span>
+        </div>
+
     </main>
 
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="modal hidden">
+    <div class="modal-content">
+        <h3>Settings</h3>
+        <label>
+            Auto-save:
+            <input type="checkbox" id="autoSaveToggle" checked>
+        </label>
+        <button id="closeSettings">Close</button>
+    </div>
 </div>
 
 <script src="script.js"></script>
