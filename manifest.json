@@ -1,0 +1,16 @@
+{
+  "name": "Zen-Notes",
+  "short_name": "ZenNotes",
+  "description": "A peaceful, private workspace for your thoughts.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#0a84ff",
+  "icons": [
+    {
+      "src": "icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
