@@ -1,23 +1,31 @@
-// 1. Auth & Data
-const PASSWORD = "yourpassword"; // Change this!
-let folders = JSON.parse(localStorage.getItem('zen_notes_data')) || [
-    { id: Date.now(), name: "First Folder", notes: "" }
+// CONFIGURATION
+const USER_DATA = {
+    username: "admin",
+    password: "password123"
+};
+
+// DATA HANDLING
+let folders = JSON.parse(localStorage.getItem('zen_notes_v2')) || [
+    { id: Date.now(), name: "Unsorted Notes", notes: "" }
 ];
 let currentFolderId = folders[0].id;
 
-// 2. Password Check
-function checkPassword() {
-    const input = document.getElementById('password-input').value;
-    if (input === PASSWORD) {
+// AUTHENTICATION LOGIC
+function checkAuth() {
+    const userIn = document.getElementById('username-input').value;
+    const passIn = document.getElementById('password-input').value;
+    const error = document.getElementById('error-msg');
+
+    if (userIn === USER_DATA.username && passIn === USER_DATA.password) {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('app-container').style.display = 'flex';
         init();
     } else {
-        alert("Incorrect Password");
+        error.style.display = 'block';
     }
 }
 
-// 3. App Logic
+// FOLDER & NOTE LOGIC
 function init() {
     renderFolders();
     loadFolder(currentFolderId);
@@ -30,8 +38,8 @@ function renderFolders() {
         const li = document.createElement('li');
         li.className = f.id === currentFolderId ? 'active' : '';
         li.innerHTML = `
-            <span onclick="loadFolder(${f.id})" style="flex-grow:1">${f.name}</span>
-            <button onclick="deleteFolder(${f.id})" style="background:none; color:red; border:none; cursor:pointer">×</button>
+            <span onclick="loadFolder(${f.id})" style="flex:1">${f.name}</span>
+            <span onclick="deleteFolder(${f.id})" style="color:#666; font-size:1.2rem">×</span>
         `;
         list.appendChild(li);
     });
@@ -48,7 +56,7 @@ function loadFolder(id) {
 }
 
 function addFolder() {
-    const name = prompt("Folder Name:");
+    const name = prompt("New Folder Name:");
     if (name) {
         const newF = { id: Date.now(), name: name, notes: "" };
         folders.push(newF);
@@ -67,22 +75,22 @@ function deleteFolder(id) {
     }
 }
 
-// 4. Save & Export
-const noteArea = document.getElementById('note-area');
-noteArea.addEventListener('input', () => {
+// AUTO-SAVE
+document.getElementById('note-area').addEventListener('input', (e) => {
     const folder = folders.find(f => f.id === currentFolderId);
     if (folder) {
-        folder.notes = noteArea.value;
+        folder.notes = e.target.value;
         save();
     }
 });
 
 function save() {
-    localStorage.setItem('zen_notes_data', JSON.stringify(folders));
+    localStorage.setItem('zen_notes_v2', JSON.stringify(folders));
 }
 
+// PDF EXPORT
 function exportToPDF() {
-    // This triggers the browser's print dialog. 
-    // On the popup, you MUST select "Save as PDF" as the destination.
+    // This will open the system print dialog.
+    // User must select 'Save as PDF' in the printer settings.
     window.print();
 }
