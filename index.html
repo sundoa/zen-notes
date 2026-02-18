@@ -3,37 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zen-Notes</title>
+    <title>Zen-Notes | Private</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" type="image/png" href="./icon.png">
     <link rel="manifest" href="./manifest.json">
 </head>
 <body>
 
-    <div class="app-container">
+    <div id="login-screen" class="overlay">
+        <div class="login-box">
+            <h1>Zen-Notes</h1>
+            <p>Enter password to unlock your thoughts</p>
+            <input type="password" id="password-input" placeholder="Password">
+            <button onclick="checkPassword()">Unlock</button>
+        </div>
+    </div>
+
+    <div id="app-container" class="app-container" style="display: none;">
         <aside class="sidebar">
-            <h2>Zen-Notes</h2>
+            <h2>Folders</h2>
             <button class="main-btn" onclick="addFolder()">+ New Folder</button>
             <ul id="folder-list"></ul>
             <div class="footer-controls">
-                <button class="secondary-btn" onclick="exportToPDF()">📄 Export as PDF</button>
+                <button class="secondary-btn" onclick="exportToPDF()">📄 Export to PDF</button>
             </div>
         </aside>
 
         <main class="editor">
             <header>
-                <h1 id="current-folder-title">My Notes</h1>
-                <span id="save-status">All saved</span>
+                <h1 id="current-folder-title">Notes</h1>
+                <span id="save-status">Ready</span>
             </header>
-            <textarea id="note-area" placeholder="Start writing your thoughts..."></textarea>
+            <textarea id="note-area" placeholder="Start writing..."></textarea>
         </main>
     </div>
 
     <script src="./script.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js');
-        }
-    </script>
 </body>
 </html>
