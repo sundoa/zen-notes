@@ -1,35 +1,29 @@
-// 1. YOUR CREDENTIALS
-const AUTH_USER = "admin";
-const AUTH_PASS = "password123";
+// 1. CREDENTIALS
+const USERNAME = "admin";
+const PASSWORD = "password123";
 
-// 2. DATA SETUP
+// 2. DATA INITIALIZATION
 let folders = JSON.parse(localStorage.getItem('zen_notes_v2')) || [
-    { id: Date.now(), name: "Main Folder", notes: "" }
+    { id: Date.now(), name: "First Folder", notes: "" }
 ];
 let currentFolderId = folders[0].id;
 
-// 3. THE LOGIN FUNCTION (Simplified)
+// 3. AUTHENTICATION
 function checkAuth() {
-    console.log("Login button clicked..."); // Check your F12 console for this!
-    
-    const userVal = document.getElementById('username-input').value;
-    const passVal = document.getElementById('password-input').value;
-    const loginScreen = document.getElementById('login-screen');
-    const appContainer = document.getElementById('app-container');
-    const errorMsg = document.getElementById('error-msg');
+    const userIn = document.getElementById('username-input').value;
+    const passIn = document.getElementById('password-input').value;
+    const error = document.getElementById('error-msg');
 
-    if (userVal === AUTH_USER && passVal === AUTH_PASS) {
-        console.log("Access Granted");
-        loginScreen.style.setProperty('display', 'none', 'important');
-        appContainer.style.setProperty('display', 'flex', 'important');
+    if (userIn === USERNAME && passIn === PASSWORD) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app-container').style.display = 'flex';
         initApp();
     } else {
-        console.log("Access Denied");
-        errorMsg.style.display = 'block';
+        error.style.display = 'block';
     }
 }
 
-// 4. APP LOGIC
+// 4. MAIN APP FUNCTIONS
 function initApp() {
     renderFolders();
     loadFolder(currentFolderId);
@@ -37,14 +31,13 @@ function initApp() {
 
 function renderFolders() {
     const list = document.getElementById('folder-list');
-    if(!list) return;
     list.innerHTML = '';
     folders.forEach(f => {
         const li = document.createElement('li');
         li.className = f.id === currentFolderId ? 'active' : '';
         li.innerHTML = `
             <span onclick="loadFolder(${f.id})" style="flex:1">${f.name}</span>
-            <span onclick="deleteFolder(${f.id})" style="cursor:pointer; padding:0 10px;">×</span>
+            <span onclick="deleteFolder(${f.id})" style="color:#666; cursor:pointer">×</span>
         `;
         list.appendChild(li);
     });
@@ -61,12 +54,12 @@ function loadFolder(id) {
 }
 
 function addFolder() {
-    const name = prompt("Folder Name:");
+    const name = prompt("Folder name:");
     if (name) {
-        const newF = { id: Date.now(), name: name, notes: "" };
-        folders.push(newF);
-        saveData();
-        loadFolder(newF.id);
+        const newFolder = { id: Date.now(), name: name, notes: "" };
+        folders.push(newFolder);
+        save();
+        loadFolder(newFolder.id);
     }
 }
 
@@ -75,24 +68,21 @@ function deleteFolder(id) {
     if (confirm("Delete this folder?")) {
         folders = folders.filter(f => f.id !== id);
         if (currentFolderId === id) currentFolderId = folders[0].id;
-        saveData();
+        save();
         loadFolder(currentFolderId);
     }
 }
 
-// 5. AUTO-SAVE & PDF
-const noteArea = document.getElementById('note-area');
-if(noteArea) {
-    noteArea.addEventListener('input', (e) => {
-        const folder = folders.find(f => f.id === currentFolderId);
-        if (folder) {
-            folder.notes = e.target.value;
-            saveData();
-        }
-    });
-}
+// 5. STORAGE & PDF
+document.getElementById('note-area').addEventListener('input', (e) => {
+    const folder = folders.find(f => f.id === currentFolderId);
+    if (folder) {
+        folder.notes = e.target.value;
+        save();
+    }
+});
 
-function saveData() {
+function save() {
     localStorage.setItem('zen_notes_v2', JSON.stringify(folders));
 }
 
