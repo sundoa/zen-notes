@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zen-Notes | Secure Vault</title>
+    <title>Zen-Notes | Minimalist Vault</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" type="image/png" href="./icon.png">
     <link rel="manifest" href="./manifest.json">
@@ -16,14 +16,17 @@
             <div class="brand-logo">Z</div>
             <h1 id="auth-header">Zen-Notes</h1>
             <p id="auth-subtitle">Your thoughts, simplified.</p>
+            
             <div class="auth-inputs">
                 <input type="text" id="username-input" placeholder="Username" autocomplete="off">
                 <input type="password" id="password-input" placeholder="Password">
             </div>
-            <button type="button" class="primary-btn" onclick="handleAuth()" id="auth-submit-btn">Sign In</button>
+            
+            <button type="button" class="primary-btn" id="auth-submit-btn">Sign In</button>
+            
             <div class="auth-footer">
                 <span id="toggle-text">New here?</span> 
-                <button type="button" class="text-link" onclick="toggleAuthMode()" id="toggle-link">Sign Up</button>
+                <button type="button" class="text-link" id="toggle-link">Sign Up</button>
             </div>
         </div>
     </section>
@@ -32,7 +35,8 @@
         <aside class="sidebar">
             <div class="sidebar-top">
                 <input type="text" id="search-bar" placeholder="Search..." oninput="filterFolders()" class="custom-search">
-                <div class="sidebar-label">
+                
+                <div class="sidebar-header">
                     <span>COLLECTIONS</span>
                     <button type="button" class="circle-add" onclick="addFolder()">+</button>
                 </div>
