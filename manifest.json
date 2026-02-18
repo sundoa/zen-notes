@@ -2,15 +2,30 @@
   "name": "Zen-Notes",
   "short_name": "ZenNotes",
   "description": "A peaceful, private workspace for your thoughts.",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#0a84ff",
   "icons": [
     {
-      "src": "icon.jpg",
+      "src": "./icon.jpg",
       "sizes": "736x736",
       "type": "image/jpeg"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./icon.jpg",
+      "sizes": "736x736",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Desktop View"
+    },
+    {
+      "src": "./icon.jpg",
+      "sizes": "736x736",
+      "type": "image/jpeg",
+      "label": "Mobile View"
     }
   ]
 }
