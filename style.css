@@ -4,68 +4,188 @@
 
 body {
     margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: system-ui, sans-serif;
     background: #111;
-    color: #fff;
+    color: white;
+}
+
+/* AUTH */
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #0f0f0f;
+}
+
+.auth-box {
+    background: #1a1a1a;
+    padding: 40px;
+    border-radius: 12px;
+    width: 320px;
     display: flex;
     flex-direction: column;
+    gap: 15px;
+}
+
+.auth-box input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background: #222;
+    color: white;
+}
+
+.auth-box button {
+    padding: 10px;
+    border: none;
+    background: #3a3a3a;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.auth-box button:hover {
+    background: #555;
+}
+
+#toggleAuth {
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+#authMessage {
+    font-size: 13px;
+    color: #ff6b6b;
+}
+
+.hidden {
+    display: none;
+}
+
+/* APP LAYOUT */
+
+.app {
+    display: flex;
     height: 100vh;
 }
 
-header {
+/* SIDEBAR */
+
+.sidebar {
+    width: 260px;
+    background: #1a1a1a;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #222;
+}
+
+.sidebar-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 16px;
-    background: #1a1a1a;
+}
+
+.sidebar h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+#newFolderBtn {
+    background: #333;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#searchInput {
+    margin-top: 15px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background: #222;
+    color: white;
+}
+
+#folderList {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+#folderList li {
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#folderList li:hover {
+    background: #2a2a2a;
+}
+
+.logout {
+    background: #2a2a2a;
+    border: none;
+    color: white;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* EDITOR */
+
+.editor-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: #141414;
     border-bottom: 1px solid #222;
 }
 
-h1 {
-    font-size: 16px;
-    margin: 0;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-}
-
-.buttons {
-    display: flex;
-    gap: 8px;
-}
-
-button {
+#noteTitle {
     background: #222;
     border: 1px solid #333;
-    color: #fff;
-    padding: 6px 12px;
-    font-size: 13px;
-    cursor: pointer;
     border-radius: 6px;
-    transition: 0.2s;
+    padding: 8px;
+    color: white;
+    width: 200px;
 }
 
-button:hover {
+.editor-buttons button {
+    margin-left: 8px;
     background: #333;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
-textarea {
+.editor-buttons button:hover {
+    background: #444;
+}
+
+#noteContent {
     flex: 1;
-    width: 100%;
     border: none;
     outline: none;
     resize: none;
     padding: 20px;
+    background: #111;
+    color: white;
     font-size: 15px;
     line-height: 1.6;
-    background: #111;
-    color: #fff;
-}
-
-footer {
-    text-align: center;
-    font-size: 12px;
-    padding: 6px;
-    background: #1a1a1a;
-    border-top: 1px solid #222;
-    opacity: 0.6;
 }
