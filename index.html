@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zen-Notes | Professional Minimalist Workspace</title>
+    <title>Zen-Notes | Minimalist Workspace</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="dark-theme locked">
 
@@ -14,24 +14,24 @@
             <header class="auth-header">
                 <div class="zen-logo">Z</div>
                 <h1 id="auth-title">Zen-Notes Vault</h1>
-                <p id="auth-desc">Secure your thoughts with local encryption.</p>
+                <p id="auth-desc">Secure your thoughts locally.</p>
             </header>
 
-            <form id="auth-form" onsubmit="return false;">
+            <div class="auth-fields">
                 <div class="input-group">
                     <label>IDENTIFIER</label>
-                    <input type="text" id="username-field" placeholder="Username" autocomplete="username">
+                    <input type="text" id="username-field" placeholder="Username">
                 </div>
                 <div class="input-group">
                     <label>ACCESS KEY</label>
-                    <input type="password" id="password-field" placeholder="••••••••" autocomplete="current-password">
+                    <input type="password" id="password-field" placeholder="••••••••">
                 </div>
-                <button type="submit" id="auth-main-btn">Sign In</button>
-            </form>
+                <button type="button" id="auth-main-btn" onclick="handleAuth()">Sign In</button>
+            </div>
 
             <footer class="auth-footer">
                 <p id="toggle-hint">First time here?</p>
-                <button id="auth-toggle-link">Initialize New Account</button>
+                <button id="auth-toggle-link" onclick="toggleAuthMode()">Initialize New Account</button>
             </footer>
         </div>
     </div>
@@ -42,58 +42,29 @@
                 <div class="search-container">
                     <input type="text" id="folder-search" placeholder="Search collections..." oninput="handleSearch()">
                 </div>
-                
                 <nav class="collections-nav">
                     <div class="section-header">
                         <span>COLLECTIONS</span>
-                        <button class="add-btn" onclick="createNewFolder()" title="New Collection">+</button>
+                        <button class="add-btn" onclick="createNewFolder()">+</button>
                     </div>
-                    <ul id="folder-list">
-                        </ul>
+                    <ul id="folder-list"></ul>
                 </nav>
             </div>
-
             <div class="sidebar-bottom">
-                <div class="utility-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">Words:</span>
-                        <span id="word-count">0</span>
-                    </div>
-                </div>
                 <div class="system-controls">
-                    <button class="sys-btn" onclick="toggleInterfaceTheme()">
-                        <span class="icon">🌓</span> Appearance
-                    </button>
-                    <button class="sys-btn" onclick="generatePDF()">
-                        <span class="icon">📄</span> Export to PDF
-                    </button>
-                    <button class="sys-btn lock-trigger" onclick="forceLock()">
-                        <span class="icon">🔒</span> Lock Workspace
-                    </button>
+                    <button class="sys-btn" onclick="toggleInterfaceTheme()">🌓 Appearance</button>
+                    <button class="sys-btn" onclick="window.print()">📄 Export PDF</button>
+                    <button class="sys-btn lock-trigger" onclick="forceLock()">🔒 Lock Vault</button>
                 </div>
             </div>
         </aside>
 
         <main id="editor-container">
             <header class="editor-bar">
-                <div class="editor-info">
-                    <h2 id="active-folder-name">Daily Journal</h2>
-                    <span id="sync-status">● System Synced</span>
-                </div>
-                <div class="editor-actions">
-                    <button class="action-btn" onclick="clearCurrentNote()">Clear</button>
-                    <button class="action-btn primary" onclick="manualSave()">Save</button>
-                </div>
+                <h2 id="active-folder-name">Journal</h2>
+                <span id="sync-status">● Synced</span>
             </header>
-            
-            <div class="textarea-wrapper">
-                <textarea id="main-editor" placeholder="Start typing your masterpiece..."></textarea>
-            </div>
-            
-            <footer class="editor-footer">
-                <span id="char-count">0 characters</span>
-                <span id="last-saved">Last saved: Just now</span>
-            </footer>
+            <textarea id="main-editor" placeholder="Start writing..."></textarea>
         </main>
     </div>
 
