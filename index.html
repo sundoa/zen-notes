@@ -9,51 +9,53 @@
     <link rel="manifest" href="./manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-<body class="dark-theme locked">
+<body id="zen-app" class="dark-theme locked">
 
-    <div id="login-screen" class="overlay">
+    <section id="login-screen" class="screen overlay">
         <div class="glass-card fade-in">
             <div class="brand-logo">Z</div>
             <h1>Zen-Notes</h1>
             <p>Your thoughts, simplified.</p>
             <div class="auth-inputs">
-                <input type="text" id="username-input" placeholder="Username">
+                <input type="text" id="username-input" placeholder="Username" autocomplete="off">
                 <input type="password" id="password-input" placeholder="Password">
             </div>
-            <button type="button" class="primary-btn" onclick="handleAuth()" id="auth-submit-btn">Sign In</button>
+            <button type="button" class="primary-btn" onclick="handleAuth()">Sign In</button>
             <div class="auth-footer">
                 <span id="toggle-text">New here?</span> 
-                <button type="button" class="text-link" onclick="toggleAuthMode()" id="toggle-link">Sign Up</button>
+                <button type="button" class="text-link" onclick="toggleAuthMode()">Sign Up</button>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div id="app-container" class="app-container">
+    <section id="app-container" class="screen app-layout">
         <aside class="sidebar">
-            <div class="sidebar-top">
-                <input type="text" id="search-bar" placeholder="Search..." oninput="filterFolders()" class="custom-search">
-                <div class="sidebar-header">
+            <div class="sidebar-group">
+                <div class="search-box">
+                    <input type="text" id="search-bar" placeholder="Search..." oninput="filterFolders()">
+                </div>
+                <div class="sidebar-label">
                     <span>COLLECTIONS</span>
-                    <button type="button" class="custom-add-btn" onclick="addFolder()">+</button>
+                    <button type="button" class="circle-add" onclick="addFolder()">+</button>
                 </div>
                 <ul id="folder-list"></ul>
             </div>
             
-            <div class="sidebar-bottom">
-                <button type="button" class="menu-item-btn" onclick="toggleTheme()">🌓 Appearance</button>
-                <button type="button" class="menu-item-btn" onclick="exportToPDF()">📄 Export PDF</button>
+            <div class="sidebar-group bottom">
+                <button type="button" class="nav-btn" onclick="toggleTheme()">🌓 Appearance</button>
+                <button type="button" class="nav-btn" onclick="exportToPDF()">📄 Export PDF</button>
                 <button type="button" class="lock-btn" onclick="lockVault()">Lock Vault</button>
             </div>
         </aside>
 
-        <main class="main-editor scale-in">
-            <header class="editor-nav">
+        <main class="editor-space scale-in">
+            <header class="editor-header">
                 <h2 id="current-folder-title">Journal</h2>
                 <div id="save-indicator">● Synced</div>
             </header>
             <textarea id="note-area" placeholder="Start writing..."></textarea>
         </main>
-    </div>
+    </section>
 
     <script src="./script.js"></script>
 </body>
