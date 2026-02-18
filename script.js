@@ -1,112 +1,87 @@
-let currentUser = null;
-let activeFolder = null;
+// 1. Initial State & Data Loading
+let folders = JSON.parse(localStorage.getItem('zen_notes_data')) || [
+    { id: Date.now(), name: "My First Folder", notes: "" }
+];
+let currentFolderId = folders[0].id;
 
-// --- THEME ---
-const themeBtn = document.getElementById('theme-toggle');
-document.body.setAttribute('data-theme', localStorage.getItem('zen-theme') || 'light');
+const noteArea = document.getElementById('note-area');
+const folderList = document.getElementById('folder-list');
+const saveStatus = document.getElementById('save-status');
 
-themeBtn.addEventListener('click', () => {
-  const newTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  document.body.setAttribute('data-theme', newTheme);
-  localStorage.setItem('zen-theme', newTheme);
-});
-
-// --- AUTH (STORES PER USER) ---
-function handleAuth() {
-  const user = document.getElementById('username').value.trim();
-  const pass = document.getElementById('password').value; // In a real app, you'd verify this
-  
-  if (!user || !pass) return alert("Enter both fields");
-  
-  currentUser = user;
-  document.getElementById('auth-overlay').style.display = 'none';
-  loadFolders();
+// 2. Core Functions
+function init() {
+    renderFolders();
+    loadFolder(currentFolderId);
 }
 
-function logout() {
-  currentUser = null;
-  activeFolder = null;
-  document.getElementById('note-area').value = "";
-  document.getElementById('note-area').disabled = true;
-  document.getElementById('current-folder-name').innerText = "Select a folder";
-  document.getElementById('auth-overlay').style.display = 'flex';
+function renderFolders() {
+    folderList.innerHTML = '';
+    folders.forEach(folder => {
+        const li = document.createElement('li');
+        li.className = folder.id === currentFolderId ? 'active' : '';
+        li.innerHTML = `
+            <span onclick="loadFolder(${folder.id})">${folder.name}</span>
+            <button onclick="deleteFolder(${folder.id})">×</button>
+        `;
+        folderList.appendChild(li);
+    });
 }
 
-// --- FOLDERS & DATA ---
-function getuserData() {
-  // This fetches only the data belonging to the logged-in user
-  const allData = JSON.parse(localStorage.getItem('zen_notes_data')) || {};
-  return allData[currentUser] || {};
-}
-
-function saveUserData(folders) {
-  const allData = JSON.parse(localStorage.getItem('zen_notes_data')) || {};
-  allData[currentUser] = folders;
-  localStorage.setItem('zen_notes_data', JSON.stringify(allData));
+function loadFolder(id) {
+    currentFolderId = id;
+    const folder = folders.find(f => f.id === id);
+    if (folder) {
+        noteArea.value = folder.notes;
+        noteArea.disabled = false;
+        document.getElementById('current-folder-name').innerText = folder.name;
+        renderFolders();
+    }
 }
 
 function addFolder() {
-  const name = prompt("Folder name:");
-  if (!name) return;
-  
-  let folders = getuserData();
-  if (!folders[name]) {
-    folders[name] = "";
-    saveUserData(folders);
-    loadFolders();
-  }
+    const name = prompt("Folder name:");
+    if (name) {
+        const newFolder = { id: Date.now(), name: name, notes: "" };
+        folders.push(newFolder);
+        saveToLocalStorage();
+        renderFolders();
+        loadFolder(newFolder.id);
+    }
 }
 
-function loadFolders() {
-  const list = document.getElementById('folder-list');
-  list.innerHTML = "";
-  let folders = getuserData();
-  
-  Object.keys(folders).forEach(name => {
-    let li = document.createElement('li');
-    li.innerText = "📁 " + name;
-    if(activeFolder === name) li.classList.add('active');
-    li.onclick = () => openFolder(name);
-    list.appendChild(li);
-  });
+function deleteFolder(id) {
+    if (folders.length === 1) return alert("You need at least one folder!");
+    if (confirm("Delete this folder and all its notes?")) {
+        folders = folders.filter(f => f.id !== id);
+        if (currentFolderId === id) currentFolderId = folders[0].id;
+        saveToLocalStorage();
+        renderFolders();
+        loadFolder(currentFolderId);
+    }
 }
 
-function openFolder(name) {
-  activeFolder = name;
-  const area = document.getElementById('note-area');
-  area.disabled = false;
-  document.getElementById('current-folder-name').innerText = name;
-  
-  let folders = getuserData();
-  area.value = folders[name];
-  loadFolders(); // refresh list to show active state
-  area.focus();
-}
-
-// --- INDENTATION & AUTO-SAVE ---
-const noteArea = document.getElementById('note-area');
-
-noteArea.addEventListener('keydown', function(e) {
-  if (e.key === 'Tab') {
-    e.preventDefault();
-    const start = this.selectionStart;
-    const end = this.selectionEnd;
-
-    // Set textarea value to: text before caret + tab + text after caret
-    this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
-
-    // Put caret in correct place
-    this.selectionStart = this.selectionEnd = start + 4;
-  }
+// 3. The "Save" Logic
+let saveTimeout;
+noteArea.addEventListener('input', () => {
+    saveStatus.innerText = "Typing...";
+    
+    // Clear the previous timeout
+    clearTimeout(saveTimeout);
+    
+    // Wait 1 second after typing stops to save
+    saveTimeout = setTimeout(() => {
+        const folder = folders.find(f => f.id === currentFolderId);
+        if (folder) {
+            folder.notes = noteArea.value;
+            saveToLocalStorage();
+            saveStatus.innerText = "Saved";
+        }
+    }, 1000);
 });
 
-noteArea.addEventListener('input', (e) => {
-  if (!activeFolder) return;
-  let folders = getuserData();
-  folders[activeFolder] = e.target.value;
-  saveUserData(folders);
-  
-  const status = document.getElementById('save-status');
-  status.style.opacity = "1";
-  setTimeout(() => status.style.opacity = "0", 800);
-});
+function saveToLocalStorage() {
+    localStorage.setItem('zen_notes_data', JSON.stringify(folders));
+}
+
+// 4. Run on Startup
+init();
