@@ -6,16 +6,16 @@
     --secondary-text: #a0a0a0;
 }
 
-body, html { margin: 0; padding: 0; height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
+body, html { margin: 0; padding: 0; height: 100%; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
 
 /* Login UI */
-.overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 999; }
-.login-card { background: var(--card-bg); padding: 40px; border-radius: 20px; width: 320px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+.overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.login-card { background: var(--card-bg); padding: 40px; border-radius: 20px; width: 320px; text-align: center; border: 1px solid #222; }
 .brand-icon { width: 60px; height: 60px; background: var(--accent); border-radius: 15px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.5rem; }
-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #252525; color: white; box-sizing: border-box; }
+input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #252525; color: white; box-sizing: border-box; outline: none; }
 .login-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; }
 
-/* Main UI */
+/* Main App Layout */
 .app-container { display: flex; height: 100vh; }
 .sidebar { width: 260px; background: #151515; border-right: 1px solid #222; display: flex; flex-direction: column; padding: 20px; }
 .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -31,9 +31,10 @@ input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 
 .export-btn { background: #222; color: #fff; border: 1px solid #333; width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 10px; }
 .logout-link { background: none; border: none; color: var(--secondary-text); cursor: pointer; width: 100%; font-size: 0.8rem; }
 
-/* PDF Print Fix */
+/* Print Styles */
 @media print {
     .sidebar, .overlay { display: none !important; }
-    .editor-pane { padding: 0; }
-    #note-area { color: black; background: white; }
+    .editor-pane { padding: 0; width: 100%; }
+    #note-area { color: black !important; background: white !important; font-size: 12pt; }
+    body { background: white !important; }
 }
