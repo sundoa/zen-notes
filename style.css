@@ -1,65 +1,184 @@
-/* 1. RESET */
-* { 
-    margin: 0; padding: 0; box-sizing: border-box; 
-    appearance: none !important; -webkit-appearance: none !important;
+/* --- 1. CORE RESET & VARIABLES --- */
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
     outline: none; border: none;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* 2. THE SHADER VARIABLES */
 :root {
-    --bg: #f2f2f7;
-    --side: #ffffff;
-    --text: #1c1c1e;
-    --btn-fill: #e5e5ea; /* Light Mode Button Color */
-    --border-color: #d1d1d6;
+    --bg: #f5f5f7;
+    --sidebar-bg: #ffffff;
+    --card-bg: #ffffff;
+    --text-main: #1d1d1f;
+    --text-muted: #86868b;
+    --accent: #007aff;
+    --border: #d2d2d7;
+    --input-fill: #f5f5f7;
+    --btn-hover: #e8e8ed;
+    --shadow: 0 4px 12px rgba(0,0,0,0.05);
     --danger: #ff3b30;
 }
 
 .dark-theme {
     --bg: #000000;
-    --side: #1c1c1e;
-    --text: #ffffff;
-    --btn-fill: #2c2c2e; /* Dark Mode Button Color */
-    --border-color: #3a3a3c;
+    --sidebar-bg: #151515;
+    --card-bg: #1c1c1e;
+    --text-main: #f5f5f7;
+    --text-muted: #a1a1a6;
+    --accent: #0a84ff;
+    --border: #333333;
+    --input-fill: #2c2c2e;
+    --btn-hover: #3a3a3c;
+    --shadow: 0 4px 20px rgba(0,0,0,0.4);
     --danger: #ff453a;
 }
 
-body { 
-    font-family: 'Inter', sans-serif; 
-    background: var(--bg); 
-    color: var(--text); 
-    transition: background 0.3s ease, color 0.3s ease;
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    transition: background 0.4s ease;
 }
 
-/* 3. LAYOUT (Structure stays the same) */
-#login-screen, #app-container { height: 100vh; width: 100vw; }
-
-body.locked #login-screen { display: flex; align-items: center; justify-content: center; }
-body.locked #app-container { display: none; }
-
-body:not(.locked) #login-screen { display: none; }
-body:not(.locked) #app-container { display: flex; }
-
-/* 4. THE BUTTONS (Shaders applied here) */
-.sidebar { 
-    width: 260px; 
-    background: var(--side); 
-    border-right: 1px solid var(--border-color);
-    display: flex; 
-    flex-direction: column; 
-    padding: 25px; 
-    justify-content: space-between;
+/* --- 2. AUTHENTICATION UI --- */
+#vault-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    display: none; align-items: center; justify-content: center;
 }
 
-.menu-item-btn {
-    width: 100%; 
-    padding: 12px; 
-    margin-bottom: 8px; 
-    border-radius: 12px; 
-    font-size: 13px; 
-    font-weight: 500; 
-    cursor: pointer; 
-    text-align: left;
-    /* This is the secret: using the variables for fill */
-    background: var(--btn-fill) !important; 
-    color:
+body.locked #vault-overlay { display: flex; }
+body.locked #workspace { display: none; }
+
+.auth-box {
+    background: var(--sidebar-bg);
+    padding: 48px;
+    border-radius: 32px;
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.zen-logo {
+    width: 60px; height: 60px;
+    background: var(--text-main);
+    color: var(--bg);
+    margin: 0 auto 24px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 700;
+}
+
+#auth-title { font-size: 24px; margin-bottom: 8px; font-weight: 700; }
+#auth-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 32px; }
+
+.input-group { text-align: left; margin-bottom: 20px; }
+.input-group label {
+    display: block; font-size: 10px; font-weight: 700;
+    letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%; padding: 14px; border-radius: 12px;
+    background: var(--input-fill); color: var(--text-main);
+    border: 1px solid var(--border); transition: 0.2s;
+}
+
+.input-group input:focus { border-color: var(--accent); background: var(--sidebar-bg); }
+
+#auth-main-btn {
+    width: 100%; padding: 16px; border-radius: 12px;
+    background: var(--text-main); color: var(--bg);
+    font-size: 16px; font-weight: 600; cursor: pointer;
+    margin: 12px 0 24px; transition: transform 0.1s;
+}
+
+#auth-main-btn:active { transform: scale(0.98); }
+
+.auth-footer button {
+    background: none; color: var(--accent); font-weight: 600;
+    cursor: pointer; font-size: 14px; margin-top: 8px;
+}
+
+/* --- 3. WORKSPACE LAYOUT --- */
+#workspace { display: flex; height: 100vh; }
+
+#sidebar {
+    width: 300px; background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    padding: 32px 20px;
+}
+
+.search-container input {
+    width: 100%; padding: 12px 16px; border-radius: 12px;
+    background: var(--input-fill); color: var(--text-main);
+    font-size: 14px; margin-bottom: 32px;
+}
+
+.section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px; font-weight: 700; color: var(--text-muted);
+    letter-spacing: 1px; margin-bottom: 12px; padding: 0 12px;
+}
+
+.add-btn {
+    background: var(--input-fill); color: var(--text-main);
+    width: 24px; height: 24px; border-radius: 6px; cursor: pointer;
+}
+
+#folder-list { list-style: none; }
+#folder-list li {
+    padding: 12px; border-radius: 12px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px; margin-bottom: 4px; transition: 0.2s;
+}
+
+#folder-list li:hover { background: var(--btn-hover); }
+#folder-list li.active { background: var(--accent); color: white; }
+
+.sys-btn {
+    width: 100%; padding: 12px; border-radius: 10px;
+    background: var(--input-fill); color: var(--text-main);
+    text-align: left; margin-top: 8px; cursor: pointer;
+    font-size: 13px; font-weight: 500; display: flex; align-items: center;
+}
+
+.sys-btn .icon { margin-right: 12px; }
+.lock-trigger { color: var(--danger); background: none; margin-top: 16px; border: 1px dashed var(--border); justify-content: center;}
+
+/* --- 4. EDITOR UI --- */
+#editor-container {
+    flex: 1; display: flex; flex-direction: column;
+    background: var(--bg); padding: 40px 80px;
+}
+
+.editor-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 40px;
+}
+
+#active-folder-name { font-size: 32px; font-weight: 700; }
+#sync-status { font-size: 12px; color: var(--text-muted); }
+
+.textarea-wrapper { flex: 1; display: flex; }
+#main-editor {
+    flex: 1; background: transparent; color: var(--text-main);
+    font-size: 18px; line-height: 1.8; resize: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.editor-footer {
+    padding-top: 20px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--text-muted);
+}
+
+/* Animations */
+.fade-in { animation: fadeIn 0.8s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
