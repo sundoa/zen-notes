@@ -23,15 +23,13 @@
 <!-- MAIN APP -->
 <div id="app" class="hidden">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
-
         <div class="sidebar-header">
             <h3>Folders</h3>
             <button id="newFolderBtn">+</button>
         </div>
 
-        <input type="text" id="searchInput" placeholder="Search everything...">
+        <input type="text" id="searchInput" placeholder="Search notes...">
 
         <ul id="folderList"></ul>
 
@@ -40,10 +38,8 @@
             <button id="settingsBtn">Settings</button>
             <button id="logoutBtn">Logout</button>
         </div>
-
     </aside>
 
-    <!-- NOTES PANEL -->
     <section class="notes-panel">
         <div class="notes-header">
             <h3 id="currentFolderTitle">Select Folder</h3>
@@ -52,13 +48,10 @@
         <ul id="notesList"></ul>
     </section>
 
-    <!-- EDITOR -->
     <main class="editor">
-
         <div class="editor-header">
             <input type="text" id="noteTitle" placeholder="Untitled Note">
             <div class="editor-actions">
-                <button id="pinNoteBtn">Pin</button>
                 <button id="downloadBtn">Download</button>
                 <button id="clearBtn">Clear</button>
                 <button id="deleteNoteBtn">Delete</button>
@@ -72,7 +65,6 @@
             <span id="charCount">0 characters</span>
             <span id="saveStatus">Saved</span>
         </div>
-
     </main>
 
 </div>
@@ -82,7 +74,7 @@
     <div class="modal-content">
         <h3>Settings</h3>
         <label>
-            Auto-save:
+            Auto-save
             <input type="checkbox" id="autoSaveToggle" checked>
         </label>
         <button id="closeSettings">Close</button>
