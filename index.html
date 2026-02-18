@@ -9,7 +9,7 @@
     <link rel="manifest" href="./manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-<body class="dark-theme">
+<body class="dark-theme locked">
 
     <div id="login-screen" class="overlay">
         <div class="glass-card fade-in">
@@ -20,30 +20,29 @@
                 <input type="text" id="username-input" placeholder="Username">
                 <input type="password" id="password-input" placeholder="Password">
             </div>
-            <button class="primary-btn" onclick="handleAuth()" id="auth-submit-btn">Sign In</button>
+            <button type="button" class="primary-btn" onclick="handleAuth()" id="auth-submit-btn">Sign In</button>
             <div class="auth-footer">
                 <span id="toggle-text">New here?</span> 
-                <button class="text-link" onclick="toggleAuthMode()" id="toggle-link">Sign Up</button>
+                <button type="button" class="text-link" onclick="toggleAuthMode()" id="toggle-link">Sign Up</button>
             </div>
         </div>
     </div>
 
-    <div id="app-container" class="app-container" style="display: none;">
+    <div id="app-container" class="app-container">
         <aside class="sidebar">
-            <div class="sidebar-section">
+            <div class="sidebar-top">
                 <input type="text" id="search-bar" placeholder="Search..." oninput="filterFolders()" class="custom-search">
-                
                 <div class="sidebar-header">
                     <span>COLLECTIONS</span>
-                    <button class="custom-add-btn" onclick="addFolder()">+</button>
+                    <button type="button" class="custom-add-btn" onclick="addFolder()">+</button>
                 </div>
                 <ul id="folder-list"></ul>
             </div>
             
-            <div class="sidebar-section bottom">
-                <button class="menu-item-btn" onclick="toggleTheme()">🌓 Appearance</button>
-                <button class="menu-item-btn" onclick="exportToPDF()">📄 Export PDF</button>
-                <button class="lock-btn" onclick="location.reload()">Lock Vault</button>
+            <div class="sidebar-bottom">
+                <button type="button" class="menu-item-btn" onclick="toggleTheme()">🌓 Appearance</button>
+                <button type="button" class="menu-item-btn" onclick="exportToPDF()">📄 Export PDF</button>
+                <button type="button" class="lock-btn" onclick="lockVault()">Lock Vault</button>
             </div>
         </aside>
 
