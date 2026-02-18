@@ -1,45 +1,33 @@
-// 1. SETTINGS
-const AUTH = {
-    user: "admin", 
-    pass: "password123" 
-};
+// 1. YOUR CREDENTIALS
+const AUTH_USER = "admin";
+const AUTH_PASS = "password123";
 
-// 2. DATA STORAGE
+// 2. DATA SETUP
 let folders = JSON.parse(localStorage.getItem('zen_notes_v2')) || [
     { id: Date.now(), name: "Main Folder", notes: "" }
 ];
 let currentFolderId = folders[0].id;
 
-// 3. AUTHENTICATION LOGIC
-const loginBtn = document.getElementById('login-button');
-const loginScreen = document.getElementById('login-screen');
-const appContainer = document.getElementById('app-container');
-
+// 3. THE LOGIN FUNCTION (Simplified)
 function checkAuth() {
+    console.log("Login button clicked..."); // Check your F12 console for this!
+    
     const userVal = document.getElementById('username-input').value;
     const passVal = document.getElementById('password-input').value;
+    const loginScreen = document.getElementById('login-screen');
+    const appContainer = document.getElementById('app-container');
     const errorMsg = document.getElementById('error-msg');
 
-    if (userVal === AUTH.user && passVal === AUTH.pass) {
-        loginScreen.style.display = 'none';
-        appContainer.style.display = 'flex';
-        initApp(); // Start the app logic only after login
+    if (userVal === AUTH_USER && passVal === AUTH_PASS) {
+        console.log("Access Granted");
+        loginScreen.style.setProperty('display', 'none', 'important');
+        appContainer.style.setProperty('display', 'flex', 'important');
+        initApp();
     } else {
+        console.log("Access Denied");
         errorMsg.style.display = 'block';
-        // Shake effect or feedback
-        document.querySelector('.login-card').style.border = "1px solid red";
     }
 }
-
-// Trigger login on button click
-loginBtn.addEventListener('click', checkAuth);
-
-// Trigger login on 'Enter' key
-document.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && loginScreen.style.display !== 'none') {
-        checkAuth();
-    }
-});
 
 // 4. APP LOGIC
 function initApp() {
@@ -49,13 +37,14 @@ function initApp() {
 
 function renderFolders() {
     const list = document.getElementById('folder-list');
+    if(!list) return;
     list.innerHTML = '';
     folders.forEach(f => {
         const li = document.createElement('li');
         li.className = f.id === currentFolderId ? 'active' : '';
         li.innerHTML = `
             <span onclick="loadFolder(${f.id})" style="flex:1">${f.name}</span>
-            <span onclick="deleteFolder(${f.id})" class="del-icon">×</span>
+            <span onclick="deleteFolder(${f.id})" style="cursor:pointer; padding:0 10px;">×</span>
         `;
         list.appendChild(li);
     });
@@ -92,15 +81,16 @@ function deleteFolder(id) {
 }
 
 // 5. AUTO-SAVE & PDF
-document.getElementById('note-area').addEventListener('input', (e) => {
-    const folder = folders.find(f => f.id === currentFolderId);
-    if (folder) {
-        folder.notes = e.target.value;
-        saveData();
-        document.getElementById('save-indicator').innerText = "Saving...";
-        setTimeout(() => { document.getElementById('save-indicator').innerText = "Synced"; }, 1000);
-    }
-});
+const noteArea = document.getElementById('note-area');
+if(noteArea) {
+    noteArea.addEventListener('input', (e) => {
+        const folder = folders.find(f => f.id === currentFolderId);
+        if (folder) {
+            folder.notes = e.target.value;
+            saveData();
+        }
+    });
+}
 
 function saveData() {
     localStorage.setItem('zen_notes_v2', JSON.stringify(folders));
